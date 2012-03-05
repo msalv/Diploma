@@ -39,7 +39,7 @@
     $uri = $_SERVER['REQUEST_URI'];
     $matches = array();
     
-    // URLs matching
+    // URI matching
     foreach ($urls as $url) {
         
         if (preg_match($url['pattern'], $uri, $matches)) {
@@ -53,10 +53,7 @@
     
     // if requested URI not matched
     
-    if ( empty( $matches ) ) {
-        header("HTTP/1.0 404 Not Found");
-        require "$documentRoot/404.php";
-        exit();
-    }
+    require "$documentRoot/404.php";
+    exit();
     
 ?>
