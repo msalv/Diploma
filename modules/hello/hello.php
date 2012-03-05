@@ -5,6 +5,6 @@
  * 
  */
 
-echo "Hello";
+echo "<pre>Hello</pre>";
 
 ?>
