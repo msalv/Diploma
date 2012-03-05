@@ -1,7 +1,7 @@
 Diploma Project
 =============
 
-This my diploma project — a social network for a university written in PHP.
+This is my diploma project — a social network for a university written in PHP.
 
 About
 -------
