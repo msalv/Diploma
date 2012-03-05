@@ -28,7 +28,7 @@
         ),
         array(
             'file' => $modules['users'],
-            'pattern' => '/^\/(?<module>users)\/(?<username>[0-9a-z]+|)$/i'
+            'pattern' => '/^\/(?<module>users)\/(?<username>[0-9a-z_-]+)\/?$/i'
         )
     );
 
