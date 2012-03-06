@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1>Not Found</h1>
-        <p>The requested URL <?php echo $uri; ?> was not found on this server.</p>
+        <p>The requested URL <?php echo $uri[0]; ?> was not found on this server.</p>
         <hr />
     </body>
 </html>
