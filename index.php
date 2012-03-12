@@ -8,12 +8,12 @@
     ini_set('display_errors', true);
     
     // Project root path
-    $documentRoot = dirname(__FILE__);
+    define('DOCUMENT_ROOT', dirname(__FILE__));
     
     // Enabled modules
     $modules = array(
-        'home' => "$documentRoot/modules/hello/hello.php",
-        'users' => "$documentRoot/modules/users/users.php"
+        'home' => DOCUMENT_ROOT . "/modules/hello/hello.php",
+        'people' => DOCUMENT_ROOT . "/modules/people/people.php"
     );
 
     // URL patterns
@@ -23,12 +23,12 @@
             'pattern' => '/^(?<index>\/)$/'
         ),
         array(
-            'file' => $modules['users'],
-            'pattern' => '/^\/users\/?$/i',
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/?$/i',
         ),
         array(
-            'file' => $modules['users'],
-            'pattern' => '/^\/users\/(?<username>[0-9a-z_-]{3,})\/?$/i'
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<username>[0-9a-z_-]{3,})\/?$/i'
         )
     );
 
@@ -43,7 +43,7 @@
     // URI matching
     foreach ($urls as $url) {
         
-        if (preg_match($url['pattern'], $uri[0], $matches)) {
+        if ( preg_match($url['pattern'], $uri[0], $matches) ) {
                       
             extract($matches);
             
@@ -54,7 +54,7 @@
     
     // if requested URI not matched
     
-    require "$documentRoot/404.php";
+    require DOCUMENT_ROOT . "/404.php";
     exit();
     
 ?>
