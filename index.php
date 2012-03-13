@@ -8,12 +8,12 @@
     ini_set('display_errors', true);
     
     // Project root path
-    define('DOCUMENT_ROOT', dirname(__FILE__));
+    define('PROJECT_ROOT', dirname(__FILE__));
     
     // Enabled modules
     $modules = array(
-        'home' => DOCUMENT_ROOT . "/modules/hello/hello.php",
-        'people' => DOCUMENT_ROOT . "/modules/people/people.php"
+        'home' => PROJECT_ROOT . "/modules/hello/hello.php",
+        'people' => PROJECT_ROOT . "/modules/people/people.php"
     );
 
     // URL patterns
@@ -54,7 +54,7 @@
     
     // if requested URI not matched
     
-    require DOCUMENT_ROOT . "/404.php";
+    require PROJECT_ROOT . "/404.php";
     exit();
     
 ?>
