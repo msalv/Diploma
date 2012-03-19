@@ -1,6 +1,9 @@
 <?php
+    // Set default charset to UTF-8
+    header('Content-Type: text/html; charset=utf-8');
+    
     /**
-     * Basic configuration  
+     * Basic configuration
      */
     
     // Debug settings
@@ -8,29 +11,11 @@
     ini_set('display_errors', true);
     
     // Project root path
-    define('PROJECT_ROOT', dirname(__FILE__));
+    define( 'PROJECT_ROOT', dirname(__FILE__) );
     
-    // Enabled modules
-    $modules = array(
-        'home' => PROJECT_ROOT . "/modules/hello/hello.php",
-        'people' => PROJECT_ROOT . "/modules/people/people.php"
-    );
-
-    // URL patterns
-    $urls = array(
-        array(
-            'file' => $modules['home'],
-            'pattern' => '/^(?<index>\/)$/'
-        ),
-        array(
-            'file' => $modules['people'],
-            'pattern' => '/^\/people\/?$/i',
-        ),
-        array(
-            'file' => $modules['people'],
-            'pattern' => '/^\/people\/(?<username>[0-9a-z_-]{3,})\/?$/i'
-        )
-    );
+    // Local settings. See local_settings.sample.php for details.
+    require_once PROJECT_ROOT . '/local_settings.php';
+    require_once PROJECT_ROOT . '/urls.php';
 
     /**
      * Application entry point
@@ -41,7 +26,7 @@
     $matches = array();
     
     // URI matching
-    foreach ($urls as $url) {
+    foreach ($URLS as $url) {
         
         if ( preg_match($url['pattern'], $uri[0], $matches) ) {
                       
@@ -51,7 +36,7 @@
             exit();
         }
     }
-    
+
     // if requested URI not matched
     
     require PROJECT_ROOT . "/404.php";
