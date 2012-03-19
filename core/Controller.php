@@ -5,7 +5,6 @@
  * @author Kirill
  */
 abstract class Controller {
-    
+    protected $_mapper;
+    protected $_view;
 }
-
-?>
