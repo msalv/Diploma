@@ -10,3 +10,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
+local_settings.php
+/modules/hello/
+/media/userpics/
+/media/thumbs/
