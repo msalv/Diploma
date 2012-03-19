@@ -1,12 +1,24 @@
 <?php
 
-    echo "<h1>Users module</h1><br />";
+    // Define current module root directory
+    define( 'MODULE_ROOT', dirname(__FILE__) );
+    
+    require MODULE_ROOT . '/models/Person.php';
+    require MODULE_ROOT . '/mappers/PersonMapper.php';
+    require MODULE_ROOT . '/controllers/PersonController.php';
+    require PROJECT_ROOT . '/core/XSLViewLoader.php';
     
     if ( isset($username) ) {
-        echo "Show $username info";
+        
+        $c = new PersonController( new XSLViewLoader('person.xsl') );
+        
+        $c->showUserInfo($username);
+        
     }
     else {
-        echo "Show list of users";
+        $c = new PersonController( new XSLViewLoader('people.xsl') );
+        
+        $c->showUserList();
     }
 
 ?>
