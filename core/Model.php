@@ -1,12 +1,13 @@
 <?php
 
 /**
- * Parent class for all models in the project.
+ * Interface for all models in the project.
  *
  * @author Kirill
  */
-abstract class Model {
+interface Model {
+    
+    public function toDOMElement($root);
     
 }
 
-?>
