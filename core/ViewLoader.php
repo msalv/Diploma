@@ -1,12 +1,12 @@
 <?php
 
 /**
- * ViewLoader supposed to load views.
+ * ViewLoader supposed to load some data to the views
  *
  * @author Kirill
  */
-class ViewLoader {
+interface ViewLoader {
     
+    public function prepare($dataset);
+    public function load($data);
 }
-
-?>
