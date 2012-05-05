@@ -12,10 +12,11 @@ abstract class Mapper {
      * @property DBO $_DBH Instance of DBO class
      */
     protected $_DBH;
-    protected $_select = "*";
-    protected $_where = "";
-    protected $_limit = "";
-    protected $_order = "";
+    protected $_select = '*';
+    protected $_where = '';
+    protected $_set = '';
+    protected $_limit = '';
+    protected $_order = '';
     protected $_params = array();
     
     public function __construct() {
@@ -35,8 +36,8 @@ abstract class Mapper {
     }
 
     public abstract function save($modelObject);
+    public abstract function update();
     public abstract function fetch();
-    public abstract function update($modelObject);
     public abstract function delete($modelObject);
     
     public function select($fields) {
@@ -58,7 +59,29 @@ abstract class Mapper {
         );
             
         $this->_where = " WHERE " . implode(' AND ', $where);
-        $this->_params = $search;
+        $this->_params = array_merge($this->_params, $search);
+            
+        return $this;
+    }
+    
+    public function set($data) {
+        
+        if ( isset($data['@attributes']) ) {
+            $data = array_merge($data, $data['@attributes']);
+        }
+        
+        unset( $data['@attributes'] );
+        unset( $data['meta'] );
+               
+        $update = array_map(
+            function ($key) {
+                return $key .= "=:$key";
+            },
+            array_keys($data)
+        );
+            
+        $this->_set = " SET " . implode(', ', $update);
+        $this->_params = array_merge($this->_params, $data);
             
         return $this;
     }
@@ -79,6 +102,13 @@ abstract class Mapper {
         $this->_order = " ORDER BY " . implode(', ', func_get_args() );
         return $this;
     }
+    
+    public function clear() {
+        $this->_select = '*';
+        $this->_where = '';
+        $this->_set = '';
+        $this->_limit = '';
+        $this->_order = '';
+        $this->_params = array();
+    }
 }
-
-?>
