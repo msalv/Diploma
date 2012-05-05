@@ -25,6 +25,15 @@
     $uri = explode("?", $_SERVER['REQUEST_URI'], 2);
     $matches = array();
     
+    // login
+    if ( !empty($_COOKIE[ session_name() ]) ) {
+        session_start();
+    }
+    if ( empty($_SESSION['id']) || ($_SESSION['ip'] != $_SERVER['REMOTE_ADDR']) ) {
+        require_once $modules['people'];
+        exit();
+    }
+    
     // URI matching
     foreach ($URLS as $url) {
         
