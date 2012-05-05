@@ -13,7 +13,7 @@ class XSLViewLoader implements ViewLoader {
     private $_template;
     
     public function __construct($template) {
-        $this->_template = MODULE_ROOT . '/views/'. $template;
+        $this->_template = TEMPLATE_ROOT . $template;
     }
     
     public function prepare($dataset) {
@@ -35,13 +35,23 @@ class XSLViewLoader implements ViewLoader {
         return $dom;
     }
     
-    public function load($data) {
+    public function load($data = null, $rootName = null) {
+        
+        if ( is_null($data) ) {
+            $data = new DOMDocument('1.0', 'utf-8');
+            $rootName = ( $rootName ) ?: 'root';
+            $data->appendChild( new DOMElement($rootName) );
+        }
         
         $xsl = new DOMDocument();
         $xsl->load($this->_template);
         
         $proc = new XSLTProcessor();
         $proc->importStylesheet($xsl);
+        
+        if ( !empty($_SESSION) ) {
+            $proc->setParameter('', array_merge($_COOKIE, $_SESSION) );
+        }
         
         echo $proc->transformToXml($data);
     }
