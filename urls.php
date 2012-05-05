@@ -20,7 +20,23 @@
         ),
         array(
             'file' => $modules['people'],
-            'pattern' => '/^\/people\/(?<username>[0-9a-z_-]{3,})\/?$/i'
+            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/(?<profile>settings)\/?(?:profile\/?)?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/settings\/(?<account>account)\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/settings\/(?<password>password)\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/logout(\/(?<logout>[a-z0-9]+)|)\/?$/i'
         )
     );
 
