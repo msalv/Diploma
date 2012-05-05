@@ -6,6 +6,9 @@
  * Edit and rename it to local_settings.php
  */
 
+// Current template
+define('TEMPLATE_ROOT', PROJECT_ROOT . '/templates/default/');
+
 // DB connection settings
 const DB_ENGINE = 'mysql';
 const DB_HOST = 'localhost';
