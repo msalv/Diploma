@@ -3,7 +3,9 @@
     // Enabled modules
     $modules = array(
         'home' => PROJECT_ROOT . "/modules/hello/hello.php",
-        'people' => PROJECT_ROOT . "/modules/people/people.php"
+        'people' => PROJECT_ROOT . "/modules/people/people.php",
+        'blogs' => PROJECT_ROOT . "/modules/blogs/blogs.php",
+        'upload' => PROJECT_ROOT . "/modules/uploadify/uploadify.php"
     );
 
     /**
@@ -12,15 +14,51 @@
     $URLS = array(
         array(
             'file' => $modules['home'],
-            'pattern' => '/^(?<index>\/)$/'
+            'pattern' => '/^\/(?<test>test)\/?$/'
+        ),
+        array(
+            'file' => $modules['upload'],
+            'pattern' => '/^\/(?<upload>upload)\/?$/'
         ),
         array(
             'file' => $modules['people'],
-            'pattern' => '/^\/people\/?$/i',
+            'pattern' => '/^(?<username>)\/$/'
         ),
         array(
             'file' => $modules['people'],
-            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})\/?$/i'
+            'pattern' => '/^\/(?<feed>feed)(?:\/(?<page>[1-9]+))?\/?$/'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people(?:\/(?<page>[1-9]+))?\/?$/i',
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})\/(?<summary>profile\/?)?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})(?:\/wall(?:\/(?<page>[1-9]+))?)?\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})\/(?<friends>friends(?:\/(?<page>[1-9]+))?)?\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<add>add)\/(?<id>[1-9]+)\/?$/i',
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<remove>remove)\/(?<id>[1-9]+)\/?$/i',
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/friends\/(?<requests>requests)(?:\/(?<page>[1-9]+))?\/?$/i',
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/people\/(?<username>[-_0-9a-z]{5,})\/(?<groups>groups(?:\/(?<page>[1-9]+))?)?\/?$/i'
         ),
         array(
             'file' => $modules['people'],
@@ -36,8 +74,24 @@
         ),
         array(
             'file' => $modules['people'],
-            'pattern' => '/^\/logout(\/(?<logout>[a-z0-9]+)|)\/?$/i'
-        )
+            'pattern' => '/^\/settings\/(?<privacy>privacy)\/?$/i'
+        ),
+        array(
+            'file' => $modules['people'],
+            'pattern' => '/^\/logout(?:\/(?<logout>[a-z0-9]+)|)\/?$/i'
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups(?:\/(?<blog_id>[1-9]+))?\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<subs>subscribers)(?:\/(?<page>[1-9]+))?\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<settings>settings)\/?$/i',
+        ),
     );
 
 ?>
