@@ -39,12 +39,8 @@
                 
                 <div class="container">
                     <div class="row">
-                        
-                        <div class="span2">
-                            <xsl:text>&#160;</xsl:text>
-                        </div>
-                        
-                        <div class="span8">
+                                               
+                        <div class="span8 offset2">
                         
                         <xsl:apply-templates select="message" />
                         
