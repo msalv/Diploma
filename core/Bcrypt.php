@@ -3,7 +3,7 @@
 /**
  * Bcrypt is an hashing algorithm which is scalable with hardware (via a configurable number of rounds).
  * This class can automatically generate salts and verify existing hashes against an input.
- * @link http://stackoverflow.com/questions/4795385/how-do-you-use-bcrypt-for-hashing-passwords-in-php
+ * @link http://stackoverflow.com/a/6337021
  * @author Andrew Moore
  */
 class Bcrypt {
