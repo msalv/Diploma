@@ -6,25 +6,21 @@
      * Basic configuration
      */
     
-    // Debug settings
+    // Debug settings. Comment these line on production
     error_reporting(E_ALL);
     ini_set('display_errors', true);
     
     // Project root path
     define( 'PROJECT_ROOT', dirname(__FILE__) );
     
-    // Local settings. See local_settings.sample.php for details.
+    // Local settings. See local_settings.sample.php for details
     require_once PROJECT_ROOT . '/local_settings.php';
     require_once PROJECT_ROOT . '/urls.php';
 
     /**
      * Application entry point
      */
-    
-    // split uri string by question mark
-    $uri = explode("?", $_SERVER['REQUEST_URI'], 2);
-    $matches = array();
-    
+      
     // login
     if ( !empty($_COOKIE[ session_name() ]) ) {
         session_start();
@@ -33,6 +29,10 @@
         require_once $modules['people'];
         exit();
     }
+    
+    // split uri string by question mark
+    $uri = explode("?", $_SERVER['REQUEST_URI'], 2);
+    $matches = array();
     
     // URI matching
     foreach ($URLS as $url) {
@@ -48,7 +48,7 @@
 
     // if requested URI not matched
     
-    require PROJECT_ROOT . "/404.php";
-    exit();
+    header("HTTP/1.0 404 Not Found");
+    die("Page not found");
     
 ?>
