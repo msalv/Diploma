@@ -1,7 +1,9 @@
 <?php
 
 require_once PROJECT_ROOT . '/core/Controller.php';
-require_once PROJECT_ROOT . '/core/ImageResizer.php';
+require_once PROJECT_ROOT . '/core/XMLViewLoader.php';
+
+require_once PEOPLE_ROOT . '/PersonMapper.php';
 
 /**
  * PersonController controls users
@@ -12,36 +14,345 @@ class PersonController extends Controller {
         
     public function __construct( $view ) {
         $this->_mapper = new PersonMapper();
-        $this->_view = $view;
+        $this->_view = new XMLViewLoader($view);
     }
-    
-    public function loadView($modelData = null, $rootName = null) {
-        if ( !empty($modelData) ) {
-            $modelData = $this->_view->prepare($modelData);
-        }
         
-        $this->_view->load($modelData, $rootName);
-    }
-    
     public function getUserInfo( $username ) {
         
         $fields = array('id', 'first_name', 'middle_name', 'last_name', 
             'gender', 'picture_url', 'date_of_birth', 'hometown', 'location',
-            'home_phone', 'work_phone', 'info', 'login');
+            'home_phone', 'work_phone', 'info', 'login', 
+            'privacy_info', 'privacy_wall', 'privacy_friends');
         
         $search = array( 'login' => $username );
         
         $this->_mapper->select($fields)->where($search);
         
-        return $this->_mapper->fetch();
+        $info = $this->_mapper->fetch();
+        if ( empty($info) ) {
+            header("HTTP/1.0 404 Not Found");
+            die("User not found");
+        }
+        
+        $areFriends = $this->_mapper->friends($username, $_SESSION['id']);
+        $isMe = $this->isMe( $info[0]->getId() );
+        
+        if  ( $areFriends || $isMe ) {
+            $info[0]->setPrivacyInfo(0);
+            $info[0]->setPrivacyWall(0);
+            $info[0]->setIsFriend(true);
+        }
+        
+        return $info;
     }
     
+    /**
+     * Checks if viewer is a page owner
+     * @param integer $id Page owner
+     * @return boolean True on success or Fail on failure 
+     */
+    public function isMe($id) {
+        return $_SESSION['id'] == $id;
+    }
+    
+    /**
+     * Getting friend list of $username using $start as offset
+     * @param integer $username User's login
+     * @param integer $start Offset
+     * @return Array of Person 
+     */
+    public function getFriends( $username, $start = 0, $amount = 10 ) {
+               
+        $info = $this->getUserInfo($username);
+        
+        if ( empty($info) ) {
+            die('User not found');
+        }
+        
+        $areFriends = $this->_mapper->friends($username, $_SESSION['id']);
+        $isMe = $this->isMe( $info[0]->getId() );
+        
+        if ( $areFriends || $isMe ) {
+            $info[0]->setPrivacyFriends(0);
+            $info[0]->setIsFriend(true);
+        }
+        
+        // getting friends list
+        $friends = $this->_mapper->fetchFriends($username, $start * $amount, $amount);
+        
+        $info[0]->setFriends($friends);
+        
+        return $info;
+    }
+    
+    /**
+     * Getting info needed to be shown when removing a friend
+     * @param integer $id Target user's $id
+     * @return mixed Array of Person on success, void on failure
+     */
+    public function showRemovePage($id) {
+        
+        if ( $this->isMe($id) ) {
+            header("Location: http://" . $_SERVER['HTTP_HOST']);
+            exit();
+        }
+        
+        $fields = array('id', 'login', 'first_name', 'middle_name', 'last_name', 
+            'gender', 'picture_url');
+        
+        $search = array( 'id' => $id );
+        
+        $this->_mapper->select($fields)->where($search);
+        
+        $info = $this->_mapper->fetch();
+        if ( empty($info) ) {
+            header("HTTP/1.0 404 Not Found");
+            die("User not found");
+        }
+        
+        if (!$this->_mapper->friends($info[0]->getLogin(), $_SESSION['id']) ) {
+            
+            // create simple xml with info
+            $dom = new DOMDocument('1.0', 'utf-8');
+            $dom->appendChild( new DOMElement('Person') );
+        
+            $xml = simplexml_import_dom($dom);
+            
+            $xml->addChild('meta');
+            
+            $xml->meta[0]->addChild('message', "{$info[0]->getName()} не дружит с вами")->addAttribute('type', 'info');
+            $xml->meta[0]->message[0]->addChild('header', 'Вы не дружите');
+            
+            $this->_view->load($dom);
+            
+            exit();
+        }
+        
+        return $info;
+    }
+    
+    /**
+     * Getting info needed to be shown when friend request going to be send
+     * @param integer $id Target user's $id
+     * @return mixed Array of Person on success, void on failure
+     */
+    public function showFriendRequest($id) {
+        
+        if ( $this->isMe($id) ) {
+            header("Location: http://" . $_SERVER['HTTP_HOST']);
+            exit();
+        }
+        
+        $fields = array('id', 'login', 'first_name', 'middle_name', 'last_name', 
+            'gender', 'picture_url');
+        
+        $search = array( 'id' => $id );
+        
+        $this->_mapper->select($fields)->where($search);
+        
+        $info = $this->_mapper->fetch();
+        if ( empty($info) ) {
+            header("HTTP/1.0 404 Not Found");
+            die("User not found");
+        }
+        
+        if ($this->_mapper->friends($info[0]->getLogin(), $_SESSION['id']) ) {
+            
+            // create simple xml with info
+            $dom = new DOMDocument('1.0', 'utf-8');
+            $dom->appendChild( new DOMElement('Person') );
+        
+            $xml = simplexml_import_dom($dom);
+            
+            $xml->addChild('meta');
+            
+            $xml->meta[0]->addChild('message', "{$info[0]->getName()} уже находится в списке ваших друзей")->addAttribute('type', 'info');
+            $xml->meta[0]->message[0]->addChild('header', 'Вы уже дружите');
+            
+            $this->_view->load($dom);
+            
+            exit();
+        }
+        
+        return $info;        
+    }
+    
+    /**
+     * Sending a friend request to user specified by $id
+     * @param integer $id New possible friend's id
+     */
+    public function sendFriendRequest($id) {       
+        // outcoming xml
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Person') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addChild('meta');
+        $xml->addAttribute('is_respond', '1');
+        
+        if ( $this->isMe($id) ) {
+            $xml->meta[0]->addChild('message', 'Дружба с самим собой? Трудное детство?')->addAttribute('type', 'success');
+            $xml->meta[0]->message[0]->addChild('header', 'Вы что творите?');
+            $xml->addAttribute('id', $_SESSION['id']);
+            $xml->addChild('login', $_SESSION['username']);
+            //$xml->addChild('picture_url', $this->_makeSubpath($id) );
+            $this->_view->load($dom);
+            exit();
+        }
+        
+        // validating data
+        $this->_checkPostData('message', 'login');
+        
+        if (strlen($_POST['message']) > 140) {
+            $_POST['message'] = substr($_POST['message'], 0, 140);
+        }
+        
+        $xml->addAttribute('id', $id);
+        $xml->addChild('login', $_POST['login']);
+        //$xml->addChild('picture_url', $this->_makeSubpath($id) );
+        
+        if ( is_numeric( $id ) ) {
+            $id = intval($id);
+            try {
+                $this->_mapper->makeRequest( $_SESSION['id'], $id, $_POST['message'] );
+                $xml->meta[0]->addChild('message', 'Ваш запрос успешно отправлен адресату')->addAttribute('type', 'success');
+                $xml->meta[0]->message[0]->addChild('header', 'Заявка отправлена');
+            }
+            catch (PDOException $e) {
+                if ($e->getCode() === '23000') {
+                    $xml->meta[0]->addChild('message', 'Вы уже отправляли заявку этому человеку')->addAttribute('type', 'info');
+                    $xml->meta[0]->message[0]->addChild('header', 'Внимание!');
+                }
+                else {
+                    $xml->meta[0]->addChild('message', 'Произошла ошибка обращения к базе данных')->addAttribute('type', 'error');
+                    $xml->meta[0]->message[0]->addChild('header', 'Не получилось');
+                }
+            }
+        }
+        else {
+            $xml->meta[0]->addChild('message', 'Данные введены не корректно')->addAttribute('type', 'error');
+            $xml->meta[0]->message[0]->addChild('header', 'Ошибка!');
+        }
+        
+        // load view anyway
+        $this->_view->load($dom);
+    }
+    
+    /**
+     * Removes person from the friend list
+     * @param type $id 
+     */    
+    public function removeFriend($id) {       
+        // outcoming xml
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Person') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addChild('meta');
+        $xml->addAttribute('is_respond', '1');
+              
+        // validating data
+        $this->_checkPostData('login');
+               
+        $xml->addAttribute('id', $id);
+        $xml->addChild('login', $_POST['login']);
+        
+        // validating target user id
+        if (!$this->_mapper->friends($_POST['login'], $_SESSION['id']) || $this->isMe($id) ) {
+            
+            $xml->meta[0]->addChild('message', "Чтобы удалить этого человека из списка друзей, сначала с ним нужно подружиться")->addAttribute('type', 'info');
+            $xml->meta[0]->message[0]->addChild('header', 'Вы не дружите');
+            
+            $this->_view->load($dom);
+            
+            exit();
+        }
+        
+        if ( is_numeric( $id ) ) {
+            $id = intval($id);
+            try {
+                $this->_mapper->removePersonFromFriends( $_SESSION['id'], $id );
+                $xml->meta[0]->addChild('message', 'Этот человек успешно удалён из вашего списка друзей')->addAttribute('type', 'success');
+                $xml->meta[0]->message[0]->addChild('header', 'Пользователь удалён');
+            }
+            catch (PDOException $e) {
+                $xml->meta[0]->addChild('message', 'Произошла ошибка обращения к базе данных')->addAttribute('type', 'error');
+                $xml->meta[0]->message[0]->addChild('header', 'Не получилось');
+            }
+        }
+        else {
+            $xml->meta[0]->addChild('message', 'Данные введены не корректно')->addAttribute('type', 'error');
+            $xml->meta[0]->message[0]->addChild('header', 'Ошибка!');
+        }
+        
+        // load view anyway
+        $this->_view->load($dom);
+    }
+    
+    public function getRequests($start = 0, $amount = 10) {
+        $info = $this->getUserInfo( $_SESSION['username'] );
+               
+        // getting friends list
+        $requests = $this->_mapper->fetchRequests($_SESSION['id'], $start * 10, $amount);
+        
+        $info[0]->setFriends($requests);
+        
+        return $info;
+    }
+    
+    public function processRequest() {
+        $this->_checkPostData('id', 'approved');
+        
+        // outcoming xml
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Person') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addChild('meta');
+        $xml->addAttribute('is_respond', '1');
+        
+        $xml->addAttribute('id', $_SESSION['id']);
+        $xml->addChild('login', $_SESSION['username']);
+        
+        $approve =  ($_POST['approved'] == '1') ?: false;
+        
+        $id = $_POST['id'];
+        
+        if ( is_numeric( $id ) ) {
+            $id = intval($id);
+            try {
+                $this->_mapper->approveRequest($id, $_SESSION['id'], $approve);
+                if ($approve) {
+                    $xml->meta[0]->addChild('message', 'Заявка одобрена')->addAttribute('type', 'success');
+                }
+                else {
+                    $xml->meta[0]->addChild('message', 'Заявка отклонена')->addAttribute('type', 'info');
+                }
+            }
+            catch (PDOException $e) {
+                if ($e->getCode() === '23000') {
+                    $xml->meta[0]->addChild('message', 'Вы уже дружите')->addAttribute('type', 'info');
+                }
+                else {
+                    $xml->meta[0]->addChild('message', 'Произошла ошибка обращения к базе данных')->addAttribute('type', 'error');
+                }
+            }
+        }
+        else {
+            $xml->meta[0]->addChild('message', 'Данные введены не корректно')->addAttribute('type', 'error');
+        }
+        
+        // load view anyway
+        $this->_view->load($dom);
+    }
+
+
     public function getUserList($start = 0) {
         
         $fields = array('id', 'first_name', 'middle_name', 'last_name', 
             'gender', 'picture_url', 'location', 'login');
         
-        $this->_mapper->select($fields)->orderBy('id')->limit($start, 30);
+        $this->_mapper->select($fields)->orderBy('id')->limit($start * 10, 30);
         
         return $this->_mapper->fetch();
     }
@@ -129,23 +440,6 @@ class PersonController extends Controller {
     }
     
     /**
-     * Checks if $_POST variable contains all required data. 
-     * If data not set the function sets them to empty string. 
-     */
-    private function _checkPostData() {
-        $keys = func_get_args();
-        
-        foreach ($keys as $key) {
-            if ( !array_key_exists($key, $_POST) ) {
-                $_POST[$key] = '';
-            }
-            else {
-                $_POST[$key] = trim( $_POST[$key] );
-            }
-        }
-    }
-
-    /**
      * Generates dir/path/name based on md5($id)
      * @param string $id Base string
      * @param integer $depth Number of sub directories
@@ -167,6 +461,8 @@ class PersonController extends Controller {
     
     private function _setProfilePicture($filename) {
         
+        require_once PROJECT_ROOT . '/core/ImageResizer.php';
+        
         try {
             $resizer = new ImageResizer($filename);
         }
@@ -178,7 +474,7 @@ class PersonController extends Controller {
         
         $path = $this->_makeSubpath($id);
         
-        $resizer->resize(200);
+        $resizer->resize(212);
         if ( $resizer->save(PROJECT_ROOT . "/media/userpics/$path/$id.jpg") ) {
             $resizer->resize(50);
             $resizer->crop();
@@ -365,7 +661,52 @@ class PersonController extends Controller {
         $this->_view->load($dom);
     }
     
+    /**
+     * Gets user privacy settings
+     * @return type 
+     */
+    public function getPrivacySettings() {
+        $fields = array('id', 'login', 'privacy_wall', 'privacy_info', 'privacy_friends', 'gender');
+        
+        $search = array( 'id' => $_SESSION['id'] );
+        
+        $this->_mapper->select($fields)->where($search);
+        
+        return $this->_mapper->fetch();
+    }
     
+    /**
+     * Updates user privacy settrings 
+     */
+    public function updatePrivacy() {
+        $this->_checkPostData('wall', 'info', 'friends');
+               
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Person') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addChild('meta');
+                
+        $xml->addAttribute('privacy_wall', $_POST['wall'] == '1' ? '1' : '0');
+        $xml->addAttribute('privacy_info', $_POST['info'] == '1' ? '1' : '0');
+        $xml->addAttribute('privacy_friends', $_POST['friends'] == '1' ? '1' : '0');
+           
+        try {
+            $this->_mapper->set((array)$xml)->where( array( 'id' => $_SESSION['id'] ) );
+            $this->_mapper->update();
+            $xml->meta[0]->addChild('message', 'Права доступа к вашим данным обновлены')->addAttribute('type', 'success');
+        }
+        catch (PDOException $e) {
+            $xml->meta[0]->addChild('message', 'При обращении к базе данных произошла ошибка')->addAttribute('type', 'error');
+        }
+        
+        // load view anyway
+        $this->_view->load($dom);
+    }
+    
+    /**
+     * Authenticates user
+     */
     public function authenticate() {
         
         $dom = new DOMDocument('1.0', 'utf-8');
@@ -375,7 +716,7 @@ class PersonController extends Controller {
             $login = $_POST['login'];
             $search = array( 'login' => $login );
             $this->_mapper
-                    ->select('id', 'password', 'first_name', 'last_name', 'person_type')
+                    ->select('id', 'password', 'first_name', 'last_name', 'person_type', 'timezone')
                     ->where($search);
             
             $info = $this->_mapper->fetch();
@@ -387,11 +728,12 @@ class PersonController extends Controller {
                     ini_set('session.cookie_httponly', true);
                     
                     session_start();
-                    $_SESSION['login'] = $login;
+                    $_SESSION['username'] = $login;
                     $_SESSION['person_type'] = $info[0]->getType();
                     $_SESSION['name'] = $info[0]->getName();
                     $_SESSION['id'] = $info[0]->getId();
                     $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+                    setcookie('timezone', $info[0]->getTimeZone() );
                     
                     header("Location: http://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
                 }
@@ -411,6 +753,39 @@ class PersonController extends Controller {
         }
         
         $this->_view->load($dom);
+    }
+    
+    /**
+     * Get posts from subscribed blogs
+     * @param integer $id Id of the current user
+     * @param integer $start Offset
+     * @param integer $amount Amount of posts to get
+     * @return array Array of posts 
+     */
+    public function getNewsFeed($id, $start = 0, $amount = 30) {
+        
+        return $this->_mapper->fetchFeed($id, $start * $amount, $amount);
+    }
+
+    /**
+     * Get user's subscribed blogs
+     * @param integer $username Login of the user
+     * @param integer $start Offset
+     * @param integer $amount Amount of posts to get
+     * @return array Array of blogs 
+     */
+    public function getBlogs($username, $start = 0, $amount = 30) {
+        
+        $info = $this->getUserInfo($username);
+        
+        if ( empty($info) ) {
+            die('user not found');
+        }
+        
+        $blogs = $this->_mapper->fetchBlogs($username, $start * $amount, $amount);
+        $info[0]->setBlogs($blogs);
+        
+        return $info;
     }
     
 }
