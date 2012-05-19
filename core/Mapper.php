@@ -90,11 +90,15 @@ abstract class Mapper {
         
         if ( is_numeric($start) && is_numeric($duration) ) {
             
-            $start = (int)$start;
-            $duration = (int)$duration;
-            
-            $this->_limit = " LIMIT $start, $duration";
+            $start = intval($start);
+            $duration = intval($duration);
         }
+        else {
+            $start = 0;
+            $duration = 10;
+        }
+        $this->_limit = " LIMIT $start, $duration";
+        
         return $this;
     }
     
