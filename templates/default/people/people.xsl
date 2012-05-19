@@ -9,6 +9,10 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+    
+    <!-- Import common templates -->
+    <xsl:import href="../common.xsl" />
+    
     <xsl:output
         method="xml"
         omit-xml-declaration="yes"
@@ -28,9 +32,6 @@
     <!-- Container template  -->
        
     <xsl:template match="dataset">
-        <div class="span3">
-           Left sidebar
-        </div>
         <div class="span9">
             <div class="page-header">
                 <h1>Люди</h1>
@@ -39,8 +40,21 @@
             <xsl:apply-templates select="Person" />
             
         </div>
+        <div class="span3">
+           <xsl:comment/>
+        </div>
     </xsl:template>
+    
+    <!-- Scripts -->
+    
+    <xsl:template mode="scripts" match="/">
+        <script>
+            (function($){
 
+            })(jQuery);
+        </script>
+    </xsl:template>
+    
     <!-- 
         Person templates starts here 
     -->
@@ -49,7 +63,7 @@
         <div class="row">
             <div class="span1">
                 <a href="/people/{login}" class="thumbnail">
-                    <xsl:apply-templates select="." mode="profile-picture" />
+                    <xsl:apply-templates select="." mode="profile-picture-50" />
                 </a>
             </div>
             <div class="span8">
@@ -61,18 +75,13 @@
                 <xsl:apply-templates select="location" />
             </div>
         </div>
-        <xsl:apply-templates select="." mode="add-separator" />
+        
+        <!-- Add horizontal line if not last -->
+        <xsl:if test="position() != last()">
+            <hr/>
+        </xsl:if>
+        
     </xsl:template>
-
-    <!-- Add horizontal line after every odd person -->
-    
-    <xsl:template mode="add-separator" match="Person" >
-        <hr />
-    </xsl:template>
-    
-    <!-- Otherwise do nothing -->
-    
-    <xsl:template mode="add-separator" match="Person[position() mod 2 = 0]" />
 
     <!-- Current location template -->
     
@@ -81,49 +90,5 @@
             <xsl:apply-templates />
         </p>
     </xsl:template>    
-    
-    <!--
-        Person's full name templates
-    -->
-    
-    <!-- Middle name is not set -->
        
-    <xsl:template mode="full-name" match="Person[not(middle_name)]">
-        <xsl:value-of select="concat(first_name, ' ', last_name)"/>
-    </xsl:template>
-    
-    <!-- Middle name is set -->
-    
-    <xsl:template mode="full-name" match="Person">
-        <xsl:value-of select="concat(first_name, ' ', middle_name, ' ', last_name)"/>
-    </xsl:template>
-    
-    <!-- 
-        Profile picture templates 
-    -->
-    
-    <!-- Profile picture is not set -->
-    
-    <xsl:template mode="profile-picture" match="Person[not(picture_url)]">
-        <xsl:apply-templates select="." mode="gender-picture" />
-    </xsl:template>
-    
-    <!-- Female default picture -->
-    
-    <xsl:template mode="gender-picture" match="Person[@gender='0']">
-        <img src="/media/img/female_50.png" class="profile-small" />
-    </xsl:template>
-    
-    <!-- Male default picture -->
-    
-    <xsl:template mode="gender-picture" match="Person">
-        <img src="/media/img/male_50.png" class="profile-small" />
-    </xsl:template>
-    
-    <!-- Profile picture is set -->
-    
-    <xsl:template mode="profile-picture" match="Person">
-        <img src="/media/thumbs/{picture_url}/{@id}.jpg" class="profile-small" />
-    </xsl:template>
-
 </xsl:stylesheet>

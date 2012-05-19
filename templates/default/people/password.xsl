@@ -14,6 +14,8 @@
     
     <!-- Import forms -->
     <xsl:import href="../forms.xsl" />
+    <!-- Import common templates -->
+    <xsl:import href="../common.xsl" />
     
     <xsl:output
         method="xml"
@@ -35,20 +37,22 @@
         <div class="span3">
             
             <ul class="nav nav-tabs nav-stacked">
-                <li><a href="/settings/profile">Профиль</a></li>
-                <li>
-                    <a href="/settings/account">Аккаунт</a>
-                </li>
+                <li><a href="/settings/profile" data-toggle="tab" data-target="#profile">Профиль</a></li>
+                <li><a href="/settings/account" data-toggle="tab" data-target="#account">Аккаунт</a></li>
                 <li class="active">
-                    <a href="/settings/password">Пароль</a>
+                    <a href="/settings/password" data-toggle="tab" data-target="#password">Пароль</a>
                 </li>
-                <li><a href="#">Приватность</a></li>
-                <li><a href="#">Оповещения</a></li>
+                <li><a href="/settings/privacy" data-toggle="tab" data-target="#privacy">Приватность</a></li>
             </ul>
             
         </div>
         <div class="span9">
+        <div class="tab-content">
             
+            <div class="tab-pane fade" id="profile"><xsl:text><![CDATA[]]></xsl:text></div>
+            <div class="tab-pane fade" id="account"><xsl:text><![CDATA[]]></xsl:text></div>
+            
+            <div class="tab-pane fade in active" id="password">
             <!-- Messages -->
             
             <xsl:apply-templates select="meta" />
@@ -69,7 +73,10 @@
                     
                 </fieldset>
             </form>
-                        
+            </div>
+
+            <div class="tab-pane fade" id="privacy"><xsl:text><![CDATA[]]></xsl:text></div>
+        </div>
         </div>
     </xsl:template>
 
@@ -90,17 +97,13 @@
             <xsl:with-param name="title" select="'Новый пароль'" />
         </xsl:call-template>
     </xsl:template>
-              
-    <!-- messages -->
+                 
+    <!-- Scripts -->
     
-    <xsl:template match="meta">
-        <xsl:apply-templates select="message" />
-    </xsl:template>
-    
-    <xsl:template match="message">
-        <div class="alert alert-{@type}">
-            <xsl:apply-templates />
-        </div>
+    <xsl:template mode="scripts" match="/">
+        <script src="/media/js/modules/settings.js">
+            <xsl:text><![CDATA[]]></xsl:text>
+        </script>
     </xsl:template>
 
 </xsl:stylesheet>
