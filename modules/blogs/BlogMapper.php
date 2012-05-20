@@ -315,5 +315,63 @@ class BlogMapper extends Mapper {
         
         return $STH->fetchAll();
     }
+    
+    /**
+     * Fetch owners of the $blog_id
+     * @param integer $blog_id Blog Id
+     * @return array Array of Blog
+     */
+    public function fetchOwners($blog_id) {
+        
+        $STH = $this->_DBH->prepare("SELECT id, login, first_name, middle_name, 
+            last_name, picture_url, gender, 1 AS is_friend 
+            FROM people, owners_blog WHERE people.id=owners_blog.owner_id 
+            AND owners_blog.blog_id=:blog_id");
+        
+        $STH->execute( array('blog_id' => $blog_id) );
+        
+        $owners = $STH->fetchAll(PDO::FETCH_ASSOC);
+        
+        $blog = array(
+            'id' => $blog_id,
+            'title' => null,
+            'info' => null,
+            'type' => null,
+            'locked' => 0,
+            'subscribed' => 1,
+            'posts' => array(),
+            'owners' => $owners
+        );
+        
+        return array( new Blog($blog) );
+    }
+    
+    /**
+     * Inserts new owner
+     * @param integer $blog_id Blog id
+     * @param integer $owner_id New owner id
+     */
+    public function insertOwner($blog_id, $owner_id) {
+        
+        $STH = $this->_DBH
+                ->prepare("INSERT INTO owners_blog(owner_id, blog_id) 
+                    VALUES (:owner_id, :blog_id)");
+        
+        $STH->execute( array('owner_id' => $owner_id, 'blog_id' => $blog_id) );
+    }
+    
+    /**
+     * Deletes new owner
+     * @param integer $blog_id Blog id
+     * @param integer $owner_id New owner id
+     */
+    public function deleteOwner($blog_id, $owner_id) {
+        
+        $STH = $this->_DBH
+                ->prepare("DELETE FROM owners_blog 
+                    WHERE owner_id=:owner_id AND blog_id=:blog_id");
+        
+        $STH->execute( array('owner_id' => $owner_id, 'blog_id' => $blog_id) );
+    }
 
 }

@@ -39,6 +39,24 @@ else if ( isset($settings) ) {
 
     $c->loadView($blog);
 }
+// owners
+else if ( isset($owners) ) {
+    $c = new BlogController('blogs/owners.xsl');
+
+    if ( !empty($_POST) ) {
+        
+        if ($owners == 'add') {
+            $c->addOwners($blog_id);
+        }
+        else if ($owners == 'remove') {
+            $c->removeOwners($blog_id);
+        }
+    }
+    
+    $blog = $c->getOwnersSettings($blog_id);
+
+    $c->loadView($blog);
+}
 // show blog
 else if ( isset($blog_id) ) {
     $c = new BlogController('blogs/casual.xsl');

@@ -118,6 +118,19 @@ class BlogController extends Controller {
     }
     
     /**
+     * Gets owners of the blog
+     * @param integer $blog_id Blog id
+     * @return array Array of Person 
+     */
+    public function getOwnersSettings($blog_id) {
+        if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            die('Access denied');
+        }
+        
+        return $this->_mapper->fetchOwners($blog_id);
+    }
+    
+    /**
      * Gets blog settings
      * @param integer $blog_id Blog id
      * @return array Array of Blog on success 
@@ -181,6 +194,66 @@ class BlogController extends Controller {
         
         // load view anyway
         $this->_view->load($dom);
+    }
+    
+    
+    /**
+     * Adds new owners of the blog
+     * @param integer $blog_id Blog id
+     */
+    public function addOwners($blog_id) {
+        
+        if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            die('Access denied');
+        }
+               
+        if ( !empty($_POST['owners']) ) {
+            
+            $owners = array_unique( $_POST['owners'] );
+            
+            foreach ($owners as $owner) {
+                
+                if ( is_numeric($owner) && intval($owner) != $_SESSION['id'] ) {
+                    
+                    try {
+                        $this->_mapper->insertOwner($blog_id, intval($owner) );
+                    }
+                    catch (PDOException $e) {
+                        // ignore
+                        //echo $e->getMessage();
+                    }
+                }
+            } // end foreach
+            
+        } // end if
+    }
+    
+    public function removeOwners($blog_id) {
+        
+        if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            die('Access denied');
+        }
+        
+        if ( !empty($_POST['removed']) ) {
+            
+            $removed = array_unique( $_POST['removed'] );
+            
+            foreach ($removed as $owner) {
+                
+                if ( is_numeric($owner) && intval($owner) != $_SESSION['id'] ) {
+                    
+                    try {
+                        $this->_mapper->deleteOwner($blog_id, intval($owner) );
+                    }
+                    catch (PDOException $e) {
+                        // ignore
+                        //echo $e->getMessage();
+                    }
+                }
+            } // end foreach
+            
+        } // end if
+        
     }
     
 }
