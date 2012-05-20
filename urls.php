@@ -92,6 +92,18 @@
             'file' => $modules['blogs'],
             'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<settings>settings)\/?$/i',
         ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<owners>owners)\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>add)\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>remove)\/?$/i',
+        )
     );
 
 ?>
