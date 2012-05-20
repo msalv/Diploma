@@ -177,7 +177,7 @@
     
     <xsl:template match="Person" mode="thumb">
         <li class="span1">
-            <a href="/people/{login}" class="thumbnail">
+            <a href="/people/{login}" class="thumbnail" data-id="{@id}">
                 <xsl:attribute name="title">
                     <xsl:apply-templates select="." mode="full-name" />
                 </xsl:attribute>
