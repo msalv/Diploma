@@ -86,7 +86,10 @@
     <!-- Scripts -->
     
     <xsl:template mode="scripts" match="/">
-        <script>
+        <script src="/media/js/modules/owners.js">
+            <xsl:text><![CDATA[]]></xsl:text>
+        </script>
+        <script src="/media/js/modules/settings.js">
             <xsl:text><![CDATA[]]></xsl:text>
         </script>
     </xsl:template>
