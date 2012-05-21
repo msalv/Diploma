@@ -373,5 +373,43 @@ class BlogMapper extends Mapper {
         
         $STH->execute( array('owner_id' => $owner_id, 'blog_id' => $blog_id) );
     }
+    
+    /**
+     * Attachs event to the blog
+     * @param integer $blog_id Blog id
+     * @param array $data Event data
+     */
+    public function attachEvent($blog_id, $data) {
+        $STH = $this->_DBH
+            ->prepare("INSERT INTO events(blog_id, start_date, info) 
+                VALUES (:blog_id, :start_date, :info)");
+        
+        $STH->execute( array(
+            'blog_id' => $blog_id, 
+            'start_date' => $data['start_date'],
+            'info' => $data['info']
+        ) );
+    }
+    
+    /**
+     * Fetch most recent events attached to the blog
+     * @param integer $blog_id Blog Id
+     * @param integer $amount Amount of events
+     * @return array Array of Event 
+     */
+    public function fetchEvents($blog_id, $amount) {
+        
+        $STH = $this->_DBH
+            ->prepare("SELECT id, blog_id, start_date, info FROM events 
+                WHERE blog_id=:blog_id AND start_date >= now()
+                ORDER BY start_date 
+                LIMIT 0, $amount");
+               
+        require_once BLOGS_ROOT . '/Event.php';
+        $STH->setFetchMode(PDO::FETCH_CLASS, 'Event');
+        $STH->execute( array('blog_id' => $blog_id) );
+        
+        return $STH->fetchAll();
+    }
 
 }

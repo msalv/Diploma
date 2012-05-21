@@ -57,6 +57,34 @@ else if ( isset($owners) ) {
 
     $c->loadView($blog);
 }
+// admin events
+else if ( isset($admin_events) ) {
+    $c = new BlogController('blogs/events.xsl');
+
+    if ( !empty($_POST) ) {
+        
+        $c->addEvent($blog_id);
+        exit();
+    }
+    
+    require_once PROJECT_ROOT . '/modules/blogs/Event.php';
+    $event = new Event($blog_id);
+
+    $c->loadView( array ($event) );
+}
+// show blog
+else if ( isset($events) ) {
+    $c = new BlogController('blogs/events.xsl');
+   
+    if ( isset( $_GET['mode']) ) {
+        $events = $c->getEvents($blog_id, 3);
+    }
+    else {
+        $events = $c->getEvents($blog_id);
+    }
+
+    $c->loadView($events, null, true);
+}
 // show blog
 else if ( isset($blog_id) ) {
     $c = new BlogController('blogs/casual.xsl');

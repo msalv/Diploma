@@ -256,4 +256,82 @@ class BlogController extends Controller {
         
     }
     
+    /**
+     * Validates event date entered by user
+     * @param mixed $month Month of the year. Could be a string or a int
+     * @param mixed $day Day of the month. Could be a string or a int
+     * @param mixed $year Year. Could be a string or a int
+     * @return boolean True on success or False on failure
+     */
+    private function _validateEventDate($month, $day, $year) {
+        $month = $month ?: 0;
+        $day = $day ?: 0;
+        $year = $year ?: 0;
+        
+        return checkdate($month, $day, $year);
+    }
+    
+    
+    public function addEvent($blog_id) {
+        
+        if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            die('Access denied');
+        }
+        
+        $this->_checkPostData('day', 'month', 'year', 'info');
+       
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Event') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addAttribute('blog_id', $blog_id);
+        $xml->addChild('meta');
+        
+        // validate info
+        $xml->addChild('info', $_POST['info']);
+        if ( empty($_POST['info']) ) {
+            $xml->meta[0]->addChild('message', 'Укажите описание мероприятия')->addAttribute('type', 'error');
+        }
+        
+        // date validation
+        $month = $_POST['month'];
+        $day = $_POST['day'];
+        $year = $_POST['year'];
+        
+        if ( !$this->_validateEventDate($month, $day, $year) ) {
+            $xml->meta[0]->addChild('message', 'Дата проведения указана неверно')->addAttribute('type', 'error');
+        }
+        
+        // appeing date to the xml
+        
+        $node = $xml->addChild('start_date', "$year-$month-$day 23:59:59");
+        $node->addAttribute('day', $day);
+        $node->addAttribute('month', $month);
+        $node->addAttribute('year', $year);
+        
+        // if no mistakes were made then update the database
+        if ( !$xml->meta[0]->count() ) {
+            try {
+                $this->_mapper->attachEvent($blog_id, (array)$xml);
+                $xml->meta[0]->addChild('message', 'Мероприятие добавлено')->addAttribute('type', 'success');
+            }
+            catch (PDOException $e) {
+                $xml->meta[0]->addChild('message', 'При обращении к базе данных произошла ошибка')->addAttribute('type', 'error');
+            }
+        }
+        
+        $this->_view->load($dom);
+    }
+    
+    /**
+     * Get events
+     * @param integer $blog_id Blog id
+     * @param integer $amount Amount of events
+     * @return array Array of Event
+     */
+    public function getEvents($blog_id, $amount = 5) {
+        
+        return $this->_mapper->fetchEvents($blog_id, $amount);
+    }
+    
 }
