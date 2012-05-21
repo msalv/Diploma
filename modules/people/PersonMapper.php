@@ -255,5 +255,28 @@ class PersonMapper extends Mapper {
         
         return $STH->fetchAll();
     }
+    
+    
+    /**
+     * Fetch most recent events
+     * @param integer $user_id User id
+     * @param integer $amount Amount of events to fetch
+     * @return array Array of Event
+     */
+    public function fetchEvents($user_id, $amount) {
+        $sql = "SELECT e.id, e.blog_id, e.start_date, e.info FROM events AS e, subscribers_blog AS sb 
+            WHERE e.start_date >= now() AND e.blog_id=sb.blog_id AND sb.subscriber_id=:user_id 
+            ORDER BY e.start_date 
+            LIMIT 0, $amount";
+        
+        $STH = $this->_DBH->prepare($sql);
+        
+        require_once PROJECT_ROOT . '/modules/blogs/Event.php';
+        $STH->setFetchMode(PDO::FETCH_CLASS, 'Event');
+        
+        $STH->execute( array('user_id' => $user_id) );
+        
+        return $STH->fetchAll();
+    }
 }
 

@@ -788,4 +788,15 @@ class PersonController extends Controller {
         return $info;
     }
     
+    /**
+     * Get events
+     * @param integer $id User id
+     * @param integer $amount Amount of events
+     * @return array Array of event 
+     */
+    public function getEvents($id, $amount = 10) {
+        
+        return $this->_mapper->fetchEvents($id, $amount);
+    }
+    
 }

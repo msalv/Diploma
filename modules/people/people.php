@@ -29,14 +29,21 @@ else if ( isset($logout) ) {
 // show feed
 else if ( isset($feed) ) {
 
-    $c = new PersonController('people/feed.xsl');
     if ( isset($page) ) {
+        $c = new PersonController('people/feed.xsl');
         $feed = $c->getNewsFeed($_SESSION['id'], $page);
+        $c->loadView($feed, null, true);
+    }
+    else if ( isset($_GET['events']) ) {
+        $c = new PersonController('blogs/events.xsl');
+        $events = $c->getEvents($_SESSION['id']);
+        $c->loadView($events, null, true);
     }
     else {
+        $c = new PersonController('people/feed.xsl');
         $feed = $c->getNewsFeed($_SESSION['id']);
+        $c->loadView($feed, null, true);
     }
-    $c->loadView($feed, null, true);
 }
 // show friends
 else if ( isset($friends) ) {
