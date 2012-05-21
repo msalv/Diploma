@@ -253,9 +253,11 @@
             (function($){
 
                 var id = '<xsl:value-of select="$id"/>',
-                    $subs_block = $('div#sidebar-subs');
+                    $subs_block = $('div#sidebar-subs'),
+                    $events_block = $('div#sidebar-events');
                     
                 $subs_block.load('/groups/' + id + '/subscribers?mode=block');
+                $events_block.load('/groups/' + id + '/events?mode=block');
 
             })(jQuery);
         </script>
