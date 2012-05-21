@@ -59,10 +59,17 @@
             <xsl:apply-templates select="." mode="subscribe-button" />
             
             <hr />
-            <h4>
+            <h4 style="margin: 0 0 9px;">
+                <a href="/groups/{@id}/events">Мероприятия</a>
+            </h4>
+            
+            <div id="sidebar-events"><xsl:text><![CDATA[]]></xsl:text></div>
+            
+            <hr />
+            <h4 style="margin: 0 0 9px;">
                 <a href="/groups/{@id}/subscribers" id="show-subs">Подписчики</a>
             </h4>
-            <p><xsl:text><![CDATA[]]></xsl:text></p>
+            
             <div id="sidebar-subs"><xsl:text><![CDATA[]]></xsl:text></div>
             
             <xsl:apply-templates select="owners" />
@@ -116,7 +123,7 @@
                         <i class="icon-time">
                             <xsl:text><![CDATA[]]></xsl:text>
                         </i>
-                        <xsl:text> События</xsl:text>
+                        <xsl:text> Мероприятия</xsl:text>
                     </a>
                 </li>
                 <li class="divider">
