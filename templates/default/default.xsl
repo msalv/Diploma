@@ -38,7 +38,7 @@
                                 <li><a href="/feed">Лента</a></li>
                                 <li><a href="/people">Люди</a></li>
                                 <li><a href="/groups">Группы</a></li>
-                                <li><a href="#">События</a></li>
+                                <li><a href="/mail">Сообщения</a> <span id="msg-num"><xsl:text><![CDATA[]]></xsl:text></span></li>
                             </ul>
                             <ul class="nav pull-right">
                                 <li class="dropdown" id="user-menu">
@@ -51,7 +51,6 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a href="/people/{$username}">Моя страница</a></li>
-                                        <li><a href="#">Сообщения</a></li>
                                         <li><a href="/people/{$username}/friends">Друзья</a></li>
                                         <li><a href="/settings/">Настройки</a></li>
                                         <li class="divider"><xsl:comment/></li>
