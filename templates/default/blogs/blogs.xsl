@@ -41,7 +41,7 @@
             
         </div>
         <div class="span3">
-           <xsl:comment/>
+           <xsl:apply-templates select="." mode="create-button" />
         </div>
     </xsl:template>
     
@@ -55,8 +55,25 @@
         </script>
     </xsl:template>
     
+    <!-- Create new button -->
+    
+    <xsl:template mode="create-button" match="dataset">
+    
+        <div class="well">
+            <p>Чтобы создать новую группу, нажмите на кнопку</p>
+            <div style="text-align:right;">
+                <a class="btn btn-info" href="/groups/new">
+                    <i class="icon-asterisk icon-white"><xsl:text><![CDATA[]]></xsl:text></i>
+                    <xsl:text> </xsl:text>
+                    Создать
+                </a>
+            </div>
+        </div>
+            
+    </xsl:template>
+    
     <!-- 
-        Person templates starts here 
+       Blog templates starts here 
     -->
 
     <xsl:template match="Blog">

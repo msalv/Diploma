@@ -5,7 +5,21 @@ define( 'BLOGS_ROOT', dirname(__FILE__) );
 
 require_once BLOGS_ROOT . '/BlogController.php';
 
-if ( isset($subs) ) {
+// create new
+if ( isset($new) ) {
+    $c = new BlogController('blogs/new.xsl');
+    
+    if ( !empty($_POST) ) {
+        $blog = $c->createBlog();
+    }
+    else {
+        $blog = array ( new Blog() );
+    }
+
+    $c->loadView($blog);
+}
+// subscribers
+else if ( isset($subs) ) {
     $c = new BlogController('blogs/subs.xsl');
       
     if ( isset($page) ) {

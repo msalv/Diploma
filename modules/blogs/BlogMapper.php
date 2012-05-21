@@ -10,8 +10,20 @@ require_once BLOGS_ROOT . '/Blog.php';
  */
 class BlogMapper extends Mapper {
     
-    public function save($modelObject) {
+    public function save($data) {
+        if ( isset($data['@attributes']) ) {
+            $data = array_merge($data, $data['@attributes']);
+        }
         
+        unset( $data['@attributes'] );
+        unset( $data['meta'] );
+        
+        $sql = "INSERT INTO blogs (creator_id, title, info, type, locked) 
+            VALUES (:creator_id, :title, :info, :type, :locked)";
+        
+        $STH = $this->_DBH->prepare($sql);
+        
+        $STH->execute($data);
     }
     
     public function fetch() {

@@ -111,6 +111,10 @@
         array(
             'file' => $modules['blogs'],
             'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<events>events)\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<new>new)\/?$/i',
         )
     );
 

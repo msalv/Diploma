@@ -334,4 +334,42 @@ class BlogController extends Controller {
         return $this->_mapper->fetchEvents($blog_id, $amount);
     }
     
+    public function createBlog() {
+        
+        $this->_checkPostData('title', 'info', 'type', 'locked');
+        
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Blog') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addChild('meta');
+                
+        $xml->addAttribute('creator_id', $_SESSION['id']);
+        
+        if ( empty($_POST['title']) ) {
+            $xml->meta[0]->addChild('message', 'Вы не указали название группы')->addAttribute('type', 'error');
+        }
+        
+        $type = intval($_POST['type']);
+        
+        $xml->addChild('title', $_POST['title']);
+        $xml->addChild('info', $_POST['info']);
+        $xml->addAttribute('type',  ($type < 2) ? 2 : $type );
+        $xml->addAttribute('locked', $_POST['locked'] == '1' ? '1' : '0');
+           
+        if ( !$xml->meta[0]->count() ) {
+            try {
+                $this->_mapper->save((array)$xml);
+                header('Location: http://' . $_SERVER['HTTP_HOST'] . '/groups');
+            }
+            catch (PDOException $e) {
+                $xml->meta[0]->addChild('message', 'При обращении к базе данных произошла ошибка')->addAttribute('type', 'error');
+                echo $e->getMessage();
+            }
+        }
+        
+        // load view anyway
+        $this->_view->load($dom);
+        
+    }
 }
