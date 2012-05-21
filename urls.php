@@ -103,6 +103,14 @@
         array(
             'file' => $modules['blogs'],
             'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>remove)\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<admin_events>events)\/?$/i',
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<events>events)\/?$/i',
         )
     );
 
