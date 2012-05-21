@@ -35,7 +35,13 @@
 
         <form class="form-horizontal" method="POST" action="/groups/{@id}/admin/settings">
             <fieldset>
-            <legend>Настройки группы</legend>
+                <legend>
+                    <a href="/groups/{@id}" class="btn pull-right">
+                        <i class="icon-arrow-left"><xsl:text><![CDATA[]]></xsl:text></i>
+                        <xsl:text> к группе</xsl:text>
+                    </a>
+                    Настройки группы
+                </legend>
 
                 <xsl:apply-templates select="." mode="title" />
                 <xsl:apply-templates select="." mode="info" />

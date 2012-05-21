@@ -40,7 +40,7 @@
                 <li class="active">
                     <a href="/groups/{@id}/admin/owners" data-toggle="tab" data-target="#owners">Руководство</a>
                 </li>
-                <li><a href="/groups/{@id}/admin/events" data-toggle="tab" data-target="#events">События</a></li>
+                <li><a href="/groups/{@id}/admin/events" data-toggle="tab" data-target="#events">Мероприятия</a></li>
                 <li><a href="/groups/{@id}/admin/settings" data-toggle="tab" data-target="#settings">Настройки</a></li>
             </ul>
             
@@ -53,7 +53,13 @@
             <!-- Messages -->
             <xsl:apply-templates select="meta" />
             
-            <legend>Руководство</legend>
+            <legend>
+                <a href="/groups/{@id}" class="btn pull-right">
+                    <i class="icon-arrow-left"><xsl:text><![CDATA[]]></xsl:text></i>
+                    <xsl:text> к группе</xsl:text>
+                </a>
+                Руководство
+            </legend>
             
             <ul class="nav nav-pills">
                 <li class="active">
