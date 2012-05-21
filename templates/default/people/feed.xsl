@@ -53,12 +53,29 @@
             </div>
         </div>
         
+        <div class="span3">
+            <h4 style="margin: 0 0 9px;">
+                Ближайшие мероприятия
+            </h4>
+            
+            <div id="sidebar-events"><xsl:text><![CDATA[]]></xsl:text></div>
+        </div>
+        
     </xsl:template>
     
     <xsl:template mode="scripts" match="/">
         <script src="/media/js/modules/people.js">
             <xsl:text><![CDATA[]]></xsl:text>
-        </script>                
+        </script>
+        
+        <script>
+            <xsl:text disable-output-escaping="yes">
+            (function($) {
+                $('div#sidebar-events').load('/feed?events&amp;mode=feed');
+            })(jQuery);
+            </xsl:text>
+        </script>
+        
     </xsl:template>
             
     <!-- 
