@@ -52,7 +52,7 @@
                 <xsl:apply-templates select="." mode="locked" />
 
                 <div class="form-actions">
-                    <button class="btn btn btn-inverse" type="submit">Сохранить</button>
+                    <button class="btn btn-inverse" type="submit">Сохранить</button>
                 </div>
 
             </fieldset>
