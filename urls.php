@@ -5,7 +5,7 @@
         'home' => PROJECT_ROOT . "/modules/hello/hello.php",
         'people' => PROJECT_ROOT . "/modules/people/people.php",
         'blogs' => PROJECT_ROOT . "/modules/blogs/blogs.php",
-        'upload' => PROJECT_ROOT . "/modules/uploadify/uploadify.php"
+        'uploads' => PROJECT_ROOT . "/modules/uploads/uploads.php"
     );
 
     /**
@@ -17,8 +17,8 @@
             'pattern' => '/^\/(?<test>test)\/?$/'
         ),
         array(
-            'file' => $modules['upload'],
-            'pattern' => '/^\/(?<upload>upload)\/?$/'
+            'file' => $modules['uploads'],
+            'pattern' => '/^\/(?<uploads>uploads)\/?$/'
         ),
         array(
             'file' => $modules['people'],
