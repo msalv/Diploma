@@ -33,45 +33,51 @@
 
 // posting
 (function($){
-    var $content = $('textarea#content'),
-        $title = $('input#title');
-
-    $content.on('focus', function() {
-        $content.attr('rows', '5');
-    });
-
-    $content.on('blur', function() {
-        if ($content.val() == "") {
-            $content.attr('rows', '1');
-        }
-    });
-
-    var $form = $('form#blog-posting');
-    $form.on('submit', function(e){
-
-        if ($title.val() == "") {
-            $title.focus();
-        }
-        else if ($content.val() == "") {
-            $content.focus();
-        }
-        else {
-            $.post( $form.attr('action'), $form.serialize() )
-                .done(function(data){
-                    $('#posts').html(data).hide().fadeIn(500, function() {
-                        $title.val('');
-                        $content.val('').attr('rows', '1');
-                    });
-                });
-        }
-
-        e.preventDefault();
-    });
     
-    $content.keydown( function(e) {
-        if (e.ctrlKey && e.keyCode == 13) {
-            $form.submit();
-        }
-    });
+    function postHandler(formId, containerId) {
+        var $content = $('textarea#content'),
+            $title = $('input#title');
+
+        $content.on('focus', function() {
+            $content.attr('rows', '3');
+        });
+
+        $content.on('blur', function() {
+            if ($content.val() == "") {
+                $content.attr('rows', '1');
+            }
+        });
+
+        var $form = $(formId);
+        $form.on('submit', function(e){
+
+            if ($title.val() == "") {
+                $title.focus();
+            }
+            else if ($content.val() == "") {
+                $content.focus();
+            }
+            else {
+                $.post( $form.attr('action'), $form.serialize() )
+                    .done(function(data){
+                        $(containerId).html(data).hide().fadeIn(500, function() {
+                            $title.val('');
+                            $content.val('').attr('rows', '1');
+                        });
+                    });
+            }
+
+            e.preventDefault();
+        });
+
+        $content.keydown( function(e) {
+            if (e.ctrlKey && e.keyCode == 13) {
+                $form.submit();
+            }
+        });
+    }
+    
+    postHandler('form#blog-posting', '#posts');
+    postHandler('form#comm-posting', '#comments');
     
 })(jQuery);
