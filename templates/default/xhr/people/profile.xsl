@@ -103,7 +103,7 @@
             <div class="controls">
                 <input type="text" class="span1 inline" id="day" name="day">
                     <xsl:attribute name="value">
-                        <xsl:value-of select="current()/date_of_birth/@day" />
+                        <xsl:value-of select="number(current()/date_of_birth/@day)" />
                     </xsl:attribute>
                 </input>
                 <select class="inline span2" id="month" name="month">
