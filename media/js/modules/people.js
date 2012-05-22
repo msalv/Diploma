@@ -120,19 +120,22 @@
            
            $form = $('form', $dialog);
            
-           $form.on('submit', onSubmit);
+           if ( $form.length ) {
            
-           $('textarea', $form).keydown( function(e) {
-                if (e.ctrlKey && e.keyCode == 13) {
+               $form.on('submit', onSubmit);
+           
+                $('textarea', $form).keydown( function(e) {
+                        if (e.ctrlKey && e.keyCode == 13) {
+                            $form.submit();
+                        }
+                });
+
+                $('a#submit', $dialog).on('click', function(e) {
+
                     $form.submit();
-                }
-           });
-           
-           $('a#submit', $dialog).on('click', function(e) {
-               
-               $form.submit();
-               e.preventDefault();
-           });
+                    e.preventDefault();
+                });
+            }
            
            $dialog.modal();
        })
@@ -146,5 +149,6 @@
     $('a#add-friend').on('click', openModal);
     $('a#remove-friend').on('click', openModal);
     $('a#send-pm').on('click', openModal);
+    $('a#attach').on('click', openModal);
 
 })(jQuery);

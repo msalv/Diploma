@@ -1,7 +1,7 @@
 // blog modals
 (function($){
     
-    var openSubs = function(e) {
+    var openModal = function(e) {
        
         var url = $(this).attr('href') + '?mode=modal';
              
@@ -18,7 +18,8 @@
        e.preventDefault();
     };
     
-    $('a#show-subs').on('click', openSubs);
+    $('a#show-subs').on('click', openModal);
+    $('a#attach').on('click', openModal);
     
 })(jQuery);
 
