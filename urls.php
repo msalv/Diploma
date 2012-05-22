@@ -82,39 +82,47 @@
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups(?:\/(?<blog_id>[1-9]+))?\/?$/i',
+            'pattern' => '/^\/groups(?:\/(?<blog_id>[1-9]+))?\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<subs>subscribers)(?:\/(?<page>[1-9]+))?\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<subs>subscribers)(?:\/(?<page>[1-9]+))?\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<settings>settings)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<settings>settings)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<owners>owners)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<owners>owners)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>add)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>add)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>remove)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/owners\/(?<owners>remove)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<admin_events>events)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/admin\/(?<admin_events>events)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<events>events)\/?$/i',
+            'pattern' => '/^\/groups\/(?<blog_id>[1-9]+)\/(?<events>events)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
-            'pattern' => '/^\/groups\/(?<new>new)\/?$/i',
+            'pattern' => '/^\/groups\/(?<new>new)\/?$/i'
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/people\/[-_a-z0-9]{5,}\/wall\/post\/(?<post_id>[1-9]+)\/?$/i'
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/[-_a-z0-9]+\/post\/(?<post_id>[1-9]+)\/?$/i'
         )
     );
 
