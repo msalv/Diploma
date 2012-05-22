@@ -61,7 +61,8 @@
                 <textarea placeholder="Напишите комментарий..." style="width:98%;" rows="1" name="content" id="content">
                     <xsl:text><![CDATA[]]></xsl:text>
                 </textarea>
-                <button class="btn" type="submit">Отправить</button>
+                <button class="btn btn-info" type="submit">Отправить</button>
+                <a class="btn" type="submit" href="/uploads" id="attach">Прикрепить</a>
             </form>
                        
         </div>
