@@ -115,7 +115,7 @@
     
     <xsl:template mode="post-type" match="Post[not(title)]">
         <h4 style="margin: 0 0 9px;">
-            <a href="/people/{author_login}/post/{@id}">
+            <a href="/people/{author_login}/wall/post/{@id}">
                 <xsl:value-of select="author_name" />
             </a>
         </h4>
@@ -126,7 +126,7 @@
             <small>
                 <xsl:apply-templates select="pub_date" />
                 <xsl:text> | </xsl:text>
-                    <a href="/people/{author_login}/post/{@id}#comments">
+                    <a href="/people/{author_login}/wall/post/{@id}#comments">
                         <xsl:apply-templates select="." mode="comments" />
                     </a>
             </small>
@@ -137,7 +137,7 @@
     
     <xsl:template mode="post-type" match="Post">
         <h4 style="margin: 0 0 9px;">
-            <a href="/groups/{@blog_id}">
+            <a href="/groups/{@blog_id}/post/{@id}">
                 <xsl:value-of select="blog_title" />
             </a>
             <xsl:text>. </xsl:text>
