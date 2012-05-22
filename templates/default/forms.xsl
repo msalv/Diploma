@@ -206,7 +206,7 @@
         <xsl:param name="locked" />
         
         <xsl:if test="$locked = 0">
-        <form id="blog-posting" class="well" action="/groups/{$blog_id}" method="POST" enctype="multipart/form-data">
+        <form id="blog-posting" class="well" action="/groups/{$blog_id}" method="POST">
             <input type="text" class="input-xlarge" name="title" id="title" placeholder="Заголовок" />
             <textarea id="content" name="content" rows="1" style="width:98%;" placeholder="Напишите сообщение...">
                 <xsl:text><![CDATA[]]></xsl:text>
