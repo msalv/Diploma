@@ -77,7 +77,7 @@
     </xsl:template>
     
     <!-- Post -->
-    <xsl:template mode="gender-picture-50" match="Post[@auhtor_gender='0']">
+    <xsl:template mode="gender-picture-50" match="Post[@author_gender='0']">
         <img src="/media/img/female_50.png" class="profile-small" />
     </xsl:template>
     
@@ -100,6 +100,37 @@
     
     <xsl:template mode="profile-picture-50" match="Post">
         <img src="/media/thumbs/{author_pic}/{@author_id}.jpg" class="profile-small" />
+    </xsl:template>   
+    
+    <!-- 
+        Templates for mini user pic 
+    -->
+    
+    <!-- Profile picture is not set -->
+       
+    <!-- Comment -->
+    <xsl:template mode="profile-picture-25" match="Comment[not(author_pic)]">
+        <xsl:apply-templates select="." mode="gender-picture-25" />
+    </xsl:template>
+    
+    <!-- Female default picture -->
+       
+    <!-- Post -->
+    <xsl:template mode="gender-picture-25" match="Comment[@author_gender='0']">
+        <img src="/media/img/female_50.png" class="profile-mini" />
+    </xsl:template>
+    
+    <!-- Male default picture -->
+       
+    <!-- Post -->
+    <xsl:template mode="gender-picture-25" match="Comment">
+        <img src="/media/img/male_50.png" class="profile-mini" />
+    </xsl:template>
+    
+    <!-- Profile picture is set -->
+        
+    <xsl:template mode="profile-picture-25" match="Comment">
+        <img src="/media/thumbs/{author_pic}/{@author_id}.jpg" class="profile-mini" />
     </xsl:template>   
     
     <!-- 
