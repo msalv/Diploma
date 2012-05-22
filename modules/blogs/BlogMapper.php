@@ -56,7 +56,7 @@ class BlogMapper extends Mapper {
     }
     
     public function delete($modelObject) {
-        
+        // TODO: deletion
     }
     
     public function subscribe($id, $user_id) {
@@ -65,7 +65,7 @@ class BlogMapper extends Mapper {
             $STH->execute( array('id' => $id, 'user_id' => $user_id) );
         }
         catch (PDOException $e) {
-            return "error";
+            //return "ignore";
         }
     }
     
@@ -75,10 +75,10 @@ class BlogMapper extends Mapper {
         $STH->execute( array('id' => $id, 'user_id' => $user_id) );
     }
     
-    public function insertPost($id, $content, $title = null, $type = '1') {
+    public function insertPost($blog_id, $content, $title = null, $type = '1') {
         
         // if blog's $id is not a number then try get it as personal blog's owner login
-        if ( !is_numeric($id) ) {
+        if ( !is_numeric($blog_id) ) {
             $sql = "SELECT blogs.id, blogs.locked, blogs.type 
                     FROM blogs, people, owners_blog 
                     WHERE people.login=:blog 
@@ -93,7 +93,7 @@ class BlogMapper extends Mapper {
         }
         
         $STH = $this->_DBH->prepare($sql);
-        $STH->execute( array('blog' => $id) );
+        $STH->execute( array('blog' => $blog_id) );
         
         $blog = $STH->fetch(PDO::FETCH_ASSOC);
         
@@ -206,7 +206,8 @@ class BlogMapper extends Mapper {
             
             $sql = "SELECT posts.id, posts.title, posts.content, posts.pub_date, posts.enabled, 
                 people.first_name, people.last_name, people.picture_url, 
-                people.id AS author_id, people.login, people.gender, posts.comm_num 
+                people.id AS author_id, people.login, people.gender, posts.comm_num,
+                posts.blog_id, NULL AS comments 
                 FROM posts, people 
                 WHERE blog_id=:blog_id AND author_id=people.id 
                 ORDER BY posts.id DESC 
@@ -218,7 +219,7 @@ class BlogMapper extends Mapper {
             
             $posts = $STH->fetchAll(PDO::FETCH_ASSOC);
         }
-               
+                             
         $owner = array(
             'id' => $wall['user_id'],
             'first_name' => $wall['first_name'],
@@ -275,7 +276,8 @@ class BlogMapper extends Mapper {
            
             $sql = "SELECT posts.id, posts.title, posts.content, posts.pub_date, posts.enabled, 
                 people.first_name, people.last_name, people.gender, people.picture_url, 
-                people.id AS author_id, people.login, posts.comm_num 
+                people.id AS author_id, people.login, posts.comm_num, 
+                posts.blog_id, NULL AS comments 
                 FROM posts, people 
                 WHERE blog_id=:blog_id AND author_id=people.id 
                 ORDER BY posts.id DESC 
@@ -422,6 +424,114 @@ class BlogMapper extends Mapper {
         $STH->execute( array('blog_id' => $blog_id) );
         
         return $STH->fetchAll();
+    }
+    
+    /**
+     * Fetch post
+     * @param integer $post_id Post id
+     */
+    public function fetchPost($post_id) {
+        // getting blog info
+        $STH = $this->_DBH
+                ->prepare("SELECT b.id AS blog_id, b.locked, posts.enabled, posts.comm_num, posts.title, 
+                    posts.id AS id, posts.content, posts.author_id, p.picture_url,
+                    p.first_name, p.last_name, p.gender, p.login, posts.pub_date 
+                    FROM blogs AS b, posts, people AS p 
+                    WHERE b.id=posts.blog_id AND posts.id=:post_id AND p.id=posts.author_id");
+        
+        $STH->execute( array('post_id' => $post_id) );
+        
+        $post = $STH->fetch(PDO::FETCH_ASSOC);
+        
+        if ( empty($post) ) {
+            header("HTTP/1.0 404 Not Found");
+            die("Post not found");
+        }
+       
+        if ($post['locked'] == '1') {
+            if ( $this->_isSubscriber($post['blog_id'], $_SESSION['id']) ) {
+                $post['locked'] = '0';
+            }
+            else {
+                header('HTTP/1.0 403 Forbidden');
+                die("Access denied");
+            }
+        }
+        
+        // if user a subscriber then get posts from the blog
+        $comments = array();
+        
+        if ( $post['locked'] == '0' ) {
+           
+            $sql = "SELECT c.id, c.content, c.pub_date, c.enabled, 
+                concat(p.first_name, ' ', p.last_name) AS author_name, 
+                p.gender AS author_gender, p.picture_url AS author_pic, 
+                p.id AS author_id, p.login AS author_login 
+                FROM comments AS c, people AS p 
+                WHERE c.post_id=:post_id AND p.id=c.author_id 
+                ORDER BY c.pub_date";
+            
+            $STH = $this->_DBH->prepare($sql);
+            
+            $STH->execute( array('post_id' => $post_id) );
+            
+            $comments = $STH->fetchAll(PDO::FETCH_ASSOC);
+        }
+                     
+        $post['blog_title'] = null;
+        $post['comments'] = $comments;
+                
+        require_once BLOGS_ROOT . '/Post.php';
+        return array( new Post($post) );
+    }
+    
+    /**
+     * Insert new comment to the post
+     * @param integer $post_id Post id
+     * @param integer $author_id Author id
+     * @param string $content Message
+     */
+    public function insertComment($post_id, $author_id, $content) {
+        
+        // getting blog info
+        $STH = $this->_DBH
+                ->prepare("SELECT b.id AS blog_id, b.locked 
+                    FROM blogs AS b, posts
+                    WHERE b.id=posts.blog_id AND posts.id=:post_id");
+        
+        $STH->execute( array('post_id' => $post_id) );
+        
+        $post = $STH->fetch(PDO::FETCH_ASSOC);
+        
+        if ( empty($post) ) {
+            header("HTTP/1.0 404 Not Found");
+            die("Post not found");
+        }
+       
+        if ($post['locked'] == '1') {
+            if ( $this->_isSubscriber($post['blog_id'], $_SESSION['id']) ) {
+                $post['locked'] = '0';
+            }
+            else {
+                header('HTTP/1.0 403 Forbidden');
+                die("Access denied");
+            }
+        }
+        
+        if ( $post['locked'] == '0' ) {
+           
+            $sql = "INSERT INTO comments (post_id, author_id, content, pub_date)
+                    VALUES (:post_id, :author_id, :content, NOW())";
+            
+            $STH = $this->_DBH->prepare($sql);
+            
+            $STH->execute( array(
+                'post_id' => $post_id,
+                'author_id' => $author_id,
+                'content' => $content,
+            ) );
+        }
+        
     }
 
 }

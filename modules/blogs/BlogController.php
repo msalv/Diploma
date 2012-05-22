@@ -124,6 +124,7 @@ class BlogController extends Controller {
      */
     public function getOwnersSettings($blog_id) {
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
         
@@ -138,6 +139,7 @@ class BlogController extends Controller {
     public function getSettings($blog_id) {
         
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
         
@@ -157,6 +159,7 @@ class BlogController extends Controller {
     public function updateSettings($blog_id) {
         
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
         
@@ -204,6 +207,7 @@ class BlogController extends Controller {
     public function addOwners($blog_id) {
         
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
                
@@ -231,6 +235,7 @@ class BlogController extends Controller {
     public function removeOwners($blog_id) {
         
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
         
@@ -275,6 +280,7 @@ class BlogController extends Controller {
     public function addEvent($blog_id) {
         
         if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
             die('Access denied');
         }
         
@@ -371,5 +377,36 @@ class BlogController extends Controller {
         // load view anyway
         $this->_view->load($dom);
         
+    }
+    
+    
+    /**
+     * Get post and all its comments
+     * @param integer $id Post id
+     * @return array Array of Post 
+     */
+    public function getPost($id) {
+        return $this->_mapper->fetchPost($id);
+    }
+    
+    
+    /**
+     * Posting a comment
+     * @param integer $post_id Post id
+     */
+    public function postComment($post_id) {
+        
+        $this->_checkPostData('content');
+        
+        if ( !empty($_POST['content']) ) {
+        
+            try {
+                $this->_mapper->insertComment($post_id, $_SESSION['id'], $_POST['content']);
+            }
+            catch (PDOException $e) {
+                // ignore
+            }
+            
+        }
     }
 }

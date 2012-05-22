@@ -2,6 +2,7 @@
 
 require_once PROJECT_ROOT . '/core/Model.php';
 require_once PROJECT_ROOT . '/core/Markdown.php';
+require_once PROJECT_ROOT . '/modules/blogs/Comment.php';
 
 /**
  * Description of Post
@@ -15,7 +16,6 @@ class Post implements Model {
     private $title;
     private $content;
     private $pub_date;
-    private $post_type;
     private $enabled;
     private $comm_num;
     // following not in the table
@@ -24,10 +24,12 @@ class Post implements Model {
     private $author_pic;
     private $author_gender;
     private $blog_title;
+    private $comments = array();
     
     public function __construct($data = null) {
         if ( !empty($data) ) {
             $this->id = $data['id'];
+            $this->blog_id = $data['blog_id'];
             $this->content = $data['content'];
             $this->pub_date = $data['pub_date'];
             $this->author_name = $data['first_name'] . ' ' . $data['last_name'];
@@ -38,6 +40,12 @@ class Post implements Model {
             $this->author_gender = $data['gender'];
             $this->comm_num = $data['comm_num'];
             $this->title = $data['title'];
+            
+            if ( !empty($data['comments']) ) {
+                foreach ($data['comments'] as $c) {
+                    array_push($this->comments, new Comment($c) );
+                }
+            }
         }
     }
     
@@ -73,6 +81,13 @@ class Post implements Model {
                         $value = preg_replace('/<[^<]+>/u', '', $value);
                         $value = Markdown( $value );
                         $node->appendChild( new DOMElement($name, $value) );
+                        break;
+                    
+                    case 'comments':
+                        $comments = $node->appendChild( new DOMElement($name) );
+                        foreach ($value as $c) {
+                            $c->toDOMElement($comments);
+                        }
                         break;
 
                     default:

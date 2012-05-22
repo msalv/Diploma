@@ -112,6 +112,19 @@ else if ( isset($blog_id) ) {
 
     $c->loadView($blog);
 }
+// show post
+else if ( isset($post_id) ) {
+    $c = new BlogController('blogs/post.xsl');
+
+    if ( !empty($_POST) ) {
+        
+        $c->postComment($post_id);
+    }
+    
+    $post = $c->getPost($post_id);
+
+    $c->loadView($post);
+}
 else {
     $c = new BlogController('blogs/blogs.xsl');
     
