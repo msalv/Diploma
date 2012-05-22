@@ -779,7 +779,7 @@ class PersonController extends Controller {
         $info = $this->getUserInfo($username);
         
         if ( empty($info) ) {
-            die('user not found');
+            die('User not found');
         }
         
         $blogs = $this->_mapper->fetchBlogs($username, $start * $amount, $amount);
