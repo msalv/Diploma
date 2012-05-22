@@ -93,7 +93,8 @@
             <textarea id="content" name="content" rows="1" style="width:98%;" placeholder="Напишите сообщение...">
                 <xsl:text><![CDATA[]]></xsl:text>
             </textarea>
-            <button type="submit" class="btn">Отправить</button>
+            <button type="submit" class="btn btn-info">Отправить</button> 
+            <a class="btn" id="attach" href="/uploads">Прикрепить</a>
         </form>
         </xsl:if>
     </xsl:template>
@@ -211,8 +212,8 @@
             <textarea id="content" name="content" rows="1" style="width:98%;" placeholder="Напишите сообщение...">
                 <xsl:text><![CDATA[]]></xsl:text>
             </textarea>
-            <button type="submit" class="btn btn-info">Отправить</button>
-            <!--<button class="btn" id="attach" type="button">Прикрепить...</button>-->
+            <button type="submit" class="btn btn-info">Отправить</button> 
+            <a class="btn" id="attach" href="/uploads">Прикрепить</a>
         </form>
         </xsl:if>
     </xsl:template>
