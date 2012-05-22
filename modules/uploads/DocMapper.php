@@ -23,7 +23,7 @@ class DocMapper extends Mapper {
               
         $sql = "SELECT $this->_select FROM docs"
                 . $this->_where
-                . $this->_order
+                . " ORDER BY upload_date DESC"
                 . $this->_limit;
               
         // Prepare and execute statement fetching to Doc class
