@@ -62,15 +62,5 @@
         <xsl:apply-templates select="meta" />
             
     </xsl:template>
-    
-    <!-- scripts -->
-    
-    <xsl:template mode="scripts" match="/">
-        <script src="/media/js/modules/people.js">
-            <xsl:text><![CDATA[]]></xsl:text>
-        </script>
-    </xsl:template>
-    
-
 
 </xsl:stylesheet>
