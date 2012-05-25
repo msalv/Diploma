@@ -70,6 +70,11 @@
         <xsl:apply-templates select="." mode="gender-picture-50" />
     </xsl:template>
     
+    <!-- Message -->
+    <xsl:template mode="profile-picture-50" match="Message[not(author_pic)]">
+        <xsl:apply-templates select="." mode="gender-picture-50" />
+    </xsl:template>
+    
     <!-- Female default picture -->
     
     <xsl:template mode="gender-picture-50" match="Person[@gender='0']">
@@ -78,6 +83,11 @@
     
     <!-- Post -->
     <xsl:template mode="gender-picture-50" match="Post[@author_gender='0']">
+        <img src="/media/img/female_50.png" class="profile-small" />
+    </xsl:template>
+    
+    <!-- Message -->
+    <xsl:template mode="gender-picture-50" match="Message[@author_gender='0']">
         <img src="/media/img/female_50.png" class="profile-small" />
     </xsl:template>
     
@@ -92,6 +102,11 @@
         <img src="/media/img/male_50.png" class="profile-small" />
     </xsl:template>
     
+    <!-- Message -->
+    <xsl:template mode="gender-picture-50" match="Message">
+        <img src="/media/img/male_50.png" class="profile-small" />
+    </xsl:template>
+    
     <!-- Profile picture is set -->
     
     <xsl:template mode="profile-picture-50" match="Person">
@@ -99,6 +114,10 @@
     </xsl:template>
     
     <xsl:template mode="profile-picture-50" match="Post">
+        <img src="/media/thumbs/{author_pic}/{@author_id}.jpg" class="profile-small" />
+    </xsl:template>
+    
+    <xsl:template mode="profile-picture-50" match="Message">
         <img src="/media/thumbs/{author_pic}/{@author_id}.jpg" class="profile-small" />
     </xsl:template>   
     
