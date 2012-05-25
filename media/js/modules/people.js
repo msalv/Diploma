@@ -95,24 +95,25 @@
 // modal dialogs
 (function($){
        
+    // submit handler
+    var onSubmit = function(e) {
+
+        var $form = $(e.target),
+            url = $form.attr('action');
+        $.post(url, $form.serialize() ).done(function(data){
+            $('div#modal-messages').hide().html(data).fadeIn(500);
+        })
+        .fail(function(){
+            console.log('posting failed');
+        });
+
+        e.preventDefault();
+    };
+    
     // handler
     var openModal = function(e) {
        
-        var url = $(this).attr('href'),
-       
-        // submit handler
-        onSubmit = function(e) {
-            
-            $form = $(e.target);
-            $.post(url, $form.serialize() ).done(function(data){
-                $('div#modal-messages').hide().html(data).fadeIn(500);
-            })
-            .fail(function(){
-                console.log('posting failed');
-            });
-
-            e.preventDefault();
-        };
+        var url = $(this).attr('href');
        
        $.get(url).done(function(data){
            $dialog = $('div#common-modal');
@@ -150,5 +151,6 @@
     $('a#remove-friend').on('click', openModal);
     $('a#send-pm').on('click', openModal);
     $('a#attach').on('click', openModal);
+    $('form#send-req').on('submit', onSubmit);
 
 })(jQuery);

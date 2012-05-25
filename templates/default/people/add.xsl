@@ -27,11 +27,14 @@
         <div class="span5 offset3">
             <!-- Messages -->
             
-            <xsl:apply-templates select="meta" />
+            <div id="modal-messages">
+                <xsl:apply-templates select="meta" />
+                <xsl:text><![CDATA[]]></xsl:text>
+            </div>
           
             <!-- password -->
             
-            <form method="POST" action="/people/add/{@id}">
+            <form method="POST" action="/people/add/{@id}" id="send-req">
                 <fieldset>
                 <legend>Добавление друга</legend>
                     
