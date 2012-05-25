@@ -121,7 +121,7 @@
 
             <ul class="dropdown-menu">
                 <li>
-                    <a href="/people/mail/{$friend_id}" id="send-pm">
+                    <a href="/mail/to/{$friend_id}" id="send-pm">
                         <i class="icon-share-alt">
                             <xsl:text><![CDATA[]]></xsl:text>
                         </i>
@@ -161,7 +161,7 @@
 
             <ul class="dropdown-menu">
                 <li>
-                    <a href="/people/mail/{$friend_id}" id="send-pm">
+                    <a href="/mail/to/{$friend_id}" id="send-pm">
                         <i class="icon-share-alt">
                             <xsl:text><![CDATA[]]></xsl:text>
                         </i>
