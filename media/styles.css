@@ -21,3 +21,7 @@ body {
     z-index: -1; 
     position: relative;
 }
+
+#msg-num {
+    font-weight: bold;
+}
