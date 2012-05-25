@@ -38,7 +38,7 @@
                                 <li><a href="/feed">Лента</a></li>
                                 <li><a href="/people">Люди</a></li>
                                 <li><a href="/groups">Группы</a></li>
-                                <li><a href="/mail">Сообщения</a> <span id="msg-num"><xsl:text><![CDATA[]]></xsl:text></span></li>
+                                <li><a href="/mail">Сообщения  <span id="msg-num"><xsl:text><![CDATA[]]></xsl:text></span></a></li>
                             </ul>
                             <ul class="nav pull-right">
                                 <li class="dropdown" id="user-menu">
@@ -80,6 +80,25 @@
                 </script>
                 <script src="/media/bootstrap/js/bootstrap.min.js">
                     <xsl:text><![CDATA[]]></xsl:text>
+                </script>
+                
+                <script>
+                    (function($){
+                        
+                        $.get('/mail/counter').done(function(data){
+                        
+                            var num = parseInt(data);
+                            
+                            if (num) {
+                                $('span#msg-num').html( '+' + num );
+                            }
+                            else {
+                                $('span#msg-num').empty();
+                            }
+                        
+                        });
+                        
+                    })(jQuery);
                 </script>
                 
                 <xsl:apply-templates mode="scripts" select="." />
