@@ -51,6 +51,10 @@
         ),
         array(
             'file' => $modules['people'],
+            'pattern' => '/^\/(?<schedules>schedules)\/?$/'
+        ),
+        array(
+            'file' => $modules['people'],
             'pattern' => '/^\/people(?:\/(?<page>[^0]?[0-9]+))?\/?$/i',
         ),
         array(
@@ -128,6 +132,10 @@
         array(
             'file' => $modules['blogs'],
             'pattern' => '/^\/groups\/(?<blog_id>[^0]?[0-9]+)\/admin\/(?<admin_events>events)\/?$/i'
+        ),
+        array(
+            'file' => $modules['blogs'],
+            'pattern' => '/^\/groups\/(?<blog_id>[^0]?[0-9]+)\/admin\/(?<schedule>schedule)\/?$/i'
         ),
         array(
             'file' => $modules['blogs'],
