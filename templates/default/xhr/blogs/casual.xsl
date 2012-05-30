@@ -60,7 +60,7 @@
         <div class="row">
             <div class="span8">
                 <h3>
-                    <a href="/blogs/{/Blog/@id}/post/{@id}">
+                    <a href="/groups/{@blog_id}/post/{@id}">
                         <xsl:value-of select="title" />
                     </a>
                 </h3>
@@ -75,7 +75,7 @@
                         <xsl:text> | </xsl:text>
                         <xsl:apply-templates select="pub_date" />
                         <xsl:text> | </xsl:text>
-                            <a href="/blogs/{/Blog/@id}/post/{@id}#comments">
+                            <a href="/groups/{@blog_id}/post/{@id}#comments">
                                 <xsl:apply-templates select="." mode="comments" />
                             </a>
                     </small>
