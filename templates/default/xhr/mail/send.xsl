@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="span5">
-                            <input type="text" class="span5" name="subject" id="subject" placeholder="Тема" />
+                            <input type="text" class="span5" name="subject" id="subject" placeholder="Тема письма" />
                             <textarea name="content" class="span5" id="content" rows="3" placeholder="Сообщение">
                                 <xsl:text><![CDATA[]]></xsl:text>
                             </textarea>
