@@ -71,7 +71,7 @@
                             <li>
                                 <a href="/people/{owners/Person/login}/friends" data-toggle="pill" data-target="#online">Онлайн</a>
                             </li>
-                            <xsl:if test="@id = $id">
+                            <xsl:if test="owners/Person/@id = $id">
                                 <li class="divider"><xsl:text><![CDATA[]]></xsl:text></li>
                                 <li><a href="/people/friends/requests" data-toggle="pill" data-target="#requests">Заявки</a></li>
                             </xsl:if>
