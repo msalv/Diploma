@@ -38,9 +38,7 @@
         <div class="span12">
             
             <div class="page-header">
-                <h1>
-                    <xsl:apply-templates select="." mode="title" />
-                </h1>
+                <xsl:apply-templates select="." mode="title" />
             </div>
             
             <xsl:apply-templates select="." mode="content" />
@@ -79,11 +77,23 @@
     <!-- Title -->
 
     <xsl:template mode="title" match="Post[not(title)]">
-        <xsl:text>Сообщение на стене</xsl:text>
+        <a href="/people/{author_login}" class="btn pull-right">
+            <i class="icon-arrow-left"><xsl:text><![CDATA[]]></xsl:text></i>
+            <xsl:text> на стену</xsl:text>
+        </a>
+        <h1>
+            <xsl:text>Сообщение на стене</xsl:text>
+        </h1>
     </xsl:template>
     
     <xsl:template mode="title" match="Post">
-        <xsl:value-of select="title" />
+        <a href="/groups/{@blog_id}" class="btn pull-right">
+            <i class="icon-arrow-left"><xsl:text><![CDATA[]]></xsl:text></i>
+            <xsl:text> к группе</xsl:text>
+        </a>
+        <h1>
+            <xsl:value-of select="title" />
+        </h1>
     </xsl:template>
     
     <!-- Content -->
