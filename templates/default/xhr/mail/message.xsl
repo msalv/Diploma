@@ -49,7 +49,7 @@
                 <xsl:text>/mail/to/</xsl:text>
                 <xsl:apply-templates select="." mode="reply-to" />
             </xsl:attribute>
-            <input type="text" class="input-xlarge" name="subject" id="subject">
+            <input type="text" class="input-xlarge" name="subject" id="subject" placeholder="Тема письма">
                 <xsl:attribute name="value">
                     <xsl:text>Re: </xsl:text>
                     <xsl:apply-templates select="." mode="subject" />
