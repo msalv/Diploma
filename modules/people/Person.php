@@ -31,6 +31,7 @@ class Person implements Model {
     private $privacy_info;
     private $privacy_friends;
     private $last_login;
+    private $cellphone;
     
     //not in the table
     private $friends;
@@ -161,6 +162,10 @@ class Person implements Model {
     
     public function setBlogs($blogs) {
         $this->blogs = $blogs;
+    }
+    
+    public function getCellphone() {
+        return $this->cellphone;
     }
 }
 
