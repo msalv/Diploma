@@ -49,40 +49,43 @@
             <div class="tab-pane fade" id="inbox"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade" id="outbox"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade in active" id="msg">
-            
-            <legend>Отправить сообщение</legend>
-            
-            <!-- Messages -->
-            
-            <div id="meta">
-                <xsl:apply-templates select="meta" />
-                <xsl:text><![CDATA[]]></xsl:text>
-            </div>
-            
-            <form method="POST" action="/mail/to/{@id}" id="reply">
-                <fieldset>
-                    
-                    <div class="row">
-                        <div class="span1">
-                            <a href="/mail/to/{@id}" class="thumbnail">
-                                <xsl:apply-templates select="." mode="profile-picture-50" />
-                            </a>
-                        </div>
+                
+                <!-- Messages -->
 
-                        <div class="span5">
-                            <input type="text" class="span5" name="subject" id="subject" placeholder="Тема" />
-                            <textarea name="content" class="span5" id="content" rows="3" placeholder="Сообщение">
+                <div id="meta">
+                    <xsl:apply-templates select="meta" />
+                    <xsl:text><![CDATA[]]></xsl:text>
+                </div>
+                
+                <legend>Отправить сообщение</legend>
+            
+                <div class="row">
+
+                    <div class="span1">
+                        <a href="/people/{login}" class="thumbnail">
+                            <xsl:apply-templates select="." mode="profile-picture-50"/>
+                        </a>
+                    </div>
+
+                    <div class="span8">
+
+                        <!-- Send form -->
+
+                        <form method="POST" id="reply" action="/mail/to/{@id}">
+                            <input type="text" class="input-xlarge" name="subject" id="subject" placeholder="Тема письма"/>
+                            <textarea placeholder="Сообщение" style="width:98%;" rows="3" name="content" id="content">
                                 <xsl:text><![CDATA[]]></xsl:text>
                             </textarea>
-                        </div>
+                            <button class="btn btn-info" type="submit">Отправить</button>
+                            <a class="btn" type="submit" href="/uploads" id="attach">Прикрепить</a>
+                        </form>
+
                     </div>
-                    
-                    <div class="form-actions span6" style="text-align:right;">
-                        <button class="btn btn-inverse" type="submit">Отправить</button>
-                    </div>
-                    
-                </fieldset>
-            </form>
+
+
+                </div>
+            
+
             
             </div>
         </div>
