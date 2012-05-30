@@ -41,6 +41,7 @@
                 <li class="active">
                     <a href="/groups/{@blog_id}/admin/events" data-toggle="tab" data-target="#events">Мероприятия</a>
                 </li>
+                <li><a href="/groups/{@blog_id}/admin/schedule" data-toggle="tab" data-target="#schedule">Расписание</a></li>
                 <li><a href="/groups/{@blog_id}/admin/settings" data-toggle="tab" data-target="#settings">Настройки</a></li>
             </ul>
             
@@ -99,6 +100,7 @@
             </div>
                 
             </div>
+            <div class="tab-pane fade" id="schedule"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade" id="settings"><xsl:text><![CDATA[]]></xsl:text></div>
         </div>
                        

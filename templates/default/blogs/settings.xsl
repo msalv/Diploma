@@ -39,6 +39,7 @@
             <ul class="nav nav-tabs nav-stacked">
                 <li><a href="/groups/{@id}/admin/owners" data-toggle="tab" data-target="#owners">Руководство</a></li>
                 <li><a href="/groups/{@id}/admin/events" data-toggle="tab" data-target="#events">Мероприятия</a></li>
+                <li><a href="/groups/{@id}/admin/schedule" data-toggle="tab" data-target="#schedule">Расписание</a></li>
                 <li class="active">
                     <a href="/groups/{@id}/admin/settings" data-toggle="tab" data-target="#settings">Настройки</a>
                 </li>
@@ -50,6 +51,7 @@
         <div class="tab-content">
             <div class="tab-pane fade" id="owners"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade" id="events"><xsl:text><![CDATA[]]></xsl:text></div>
+            <div class="tab-pane fade" id="schedule"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade in active" id="settings">
             
             <!-- Messages -->
@@ -73,7 +75,10 @@
                     
                     <hr />
                     
-                    <!--<xsl:apply-templates select="." mode="type" />-->
+                    <xsl:apply-templates select="." mode="type" />
+                    
+                    <hr />
+                    
                     <xsl:apply-templates select="." mode="locked" />
                     
                     <div class="form-actions">
@@ -138,6 +143,53 @@
             <xsl:with-param name="id" select="'info'" />
             <xsl:with-param name="title" select="'Описание'" />
         </xsl:call-template>
+    </xsl:template>
+    
+    <!-- type -->
+    
+    <!-- List of types  -->
+    
+    <xsl:variable name="radios">
+        <radio id="2" name="dafault">
+            <xsl:text>обычная</xsl:text>
+        </radio>
+        <radio id="3" name="student">
+            <xsl:text>студенческая</xsl:text>
+        </radio>
+    </xsl:variable>
+   
+   <!-- Type control group -->
+    
+    <xsl:template mode="type" match="Blog">
+        
+        <div class="control-group">
+            <label class="control-label">Тип группы</label>
+            <div class="controls">
+                
+                <xsl:apply-templates select="exsl:node-set($radios)/radio" mode="check_radio">
+                    <xsl:with-param name="value" select="@type" />
+                </xsl:apply-templates>
+                
+            </div>
+        </div>
+    </xsl:template>
+    
+    <!-- Transform radios to radio buttons checking right option -->
+    
+    <xsl:template mode="check_radio" match="radio">
+        <xsl:param name="value" />
+        
+        <label class="radio">
+            <input type="radio" value="{@id}" id="{@name}" name="type">
+                <xsl:if test="$value = @id">
+                    <xsl:attribute name="checked">
+                        <xsl:text>checked</xsl:text>
+                    </xsl:attribute>
+                </xsl:if>
+            </input>
+            <xsl:value-of select="." />
+        </label>
+        
     </xsl:template>
     
 </xsl:stylesheet>

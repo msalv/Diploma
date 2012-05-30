@@ -28,7 +28,7 @@
     <xsl:include href="../default.xsl" />
     
     <xsl:template mode="title" match="/">
-        <xsl:text>Владельцы</xsl:text>
+        <xsl:text>Руководство</xsl:text>
     </xsl:template>
      
     <!-- Person information  -->
@@ -41,6 +41,7 @@
                     <a href="/groups/{@id}/admin/owners" data-toggle="tab" data-target="#owners">Руководство</a>
                 </li>
                 <li><a href="/groups/{@id}/admin/events" data-toggle="tab" data-target="#events">Мероприятия</a></li>
+                <li><a href="/groups/{@id}/admin/schedule" data-toggle="tab" data-target="#schedule">Расписание</a></li>
                 <li><a href="/groups/{@id}/admin/settings" data-toggle="tab" data-target="#settings">Настройки</a></li>
             </ul>
             
@@ -118,6 +119,7 @@
             
             </div><!-- end owners -->
             <div class="tab-pane fade" id="events"><xsl:text><![CDATA[]]></xsl:text></div>
+            <div class="tab-pane fade" id="schedule"><xsl:text><![CDATA[]]></xsl:text></div>
             <div class="tab-pane fade" id="settings"><xsl:text><![CDATA[]]></xsl:text></div>
         </div>
                        
