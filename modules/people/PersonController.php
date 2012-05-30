@@ -716,7 +716,7 @@ class PersonController extends Controller {
             $login = $_POST['login'];
             $search = array( 'login' => $login );
             $this->_mapper
-                    ->select('id', 'password', 'first_name', 'last_name', 'person_type', 'timezone')
+                    ->select('id', 'password', 'first_name', 'last_name', 'person_type', 'timezone', 'cellphone')
                     ->where($search);
             
             $info = $this->_mapper->fetch();
@@ -731,11 +731,22 @@ class PersonController extends Controller {
                     $_SESSION['username'] = $login;
                     $_SESSION['person_type'] = $info[0]->getType();
                     $_SESSION['name'] = $info[0]->getName();
-                    $_SESSION['id'] = $info[0]->getId();
+                    $_SESSION['uid'] = $info[0]->getId();
+                    $_SESSION['cellphone'] = $info[0]->getCellphone();
                     $_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
                     setcookie('timezone', $info[0]->getTimeZone() );
                     
-                    header("Location: http://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
+                    $_SESSION['code'] =  substr( sprintf('%u', crc32( $login . '+' . time() ) ), 0, 6);
+                    
+                    // send SMS
+                    try {
+                        //$result = $this->_sendCode($_SESSION['code']);
+                        //setcookie('yakoon', $result);
+                        header("Location: http://" . $_SERVER['HTTP_HOST']);
+                    }
+                    catch (Exception $e) {
+                        echo $e->getMessage();
+                    }
                 }
                 else {
                     $msg = $dom->appendChild( new DOMElement('message', 'Пароль не подошёл') );
@@ -749,6 +760,57 @@ class PersonController extends Controller {
         }
         else {
             $msg = $dom->appendChild( new DOMElement('message', 'Необходимо указать и логин, и пароль') );
+            $msg->setAttribute('type', 'error');
+        }
+        
+        $this->_view->load($dom);
+    }
+    
+    private function _sendCode($code) {
+        
+        $client = new SoapClient('http://sms.yakoon.com/sms.asmx?wsdl');
+        
+        return $client->Send( SMS_USER, // username
+                SMS_PASS
+                , // password's hash
+                'Diploma', // sender id
+                $_SESSION['cellphone'], // recipient
+                '', // template
+                "Vash kod: $code", // content
+                '1', // format
+                '', // send on
+                '' // notification
+        );
+    }
+    
+    /**
+     * User login verification 
+     */
+    public function verify() {
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('meta') );
+        
+        $this->_checkPostData('code');
+        
+        if ( !empty($_POST['code']) ) {
+            
+            if ($_POST['code'] == $_SESSION['code']) {
+                unset($_SESSION['code']);
+                
+                $_SESSION['id'] = $_SESSION['uid'];
+                unset($_SESSION['uid']);
+                unset($_SESSION['cellphone']);
+                
+                $login = $_SESSION['username'];
+                header("Location: http://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
+            }
+            else {
+                $msg = $dom->appendChild( new DOMElement('message', 'Вы ввели неправильный код') );
+                $msg->setAttribute('type', 'error');
+            }
+        }
+        else {
+            $msg = $dom->appendChild( new DOMElement('message', 'Необходимо указать проверочный код') );
             $msg->setAttribute('type', 'error');
         }
         
