@@ -19,6 +19,7 @@ class Blog implements Model {
     private $owners = array();
     private $posts = array();
     private $subscribed;
+    private $schedule;
     
     public function __construct($data = null) {
         if ( !empty($data) ) {

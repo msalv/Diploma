@@ -86,7 +86,21 @@ else if ( isset($admin_events) ) {
 
     $c->loadView( array ($event) );
 }
-// show blog
+// show schedule
+else if ( isset($schedule) ) {
+    $c = new BlogController('blogs/schedule.xsl');
+   
+    if ( !empty($_FILES) ) {
+        
+        $c->updateSchedule($blog_id);
+        exit();
+    }
+    
+    $shedule = $c->getSchedule($blog_id);
+
+    $c->loadView($shedule);
+}
+// show events
 else if ( isset($events) ) {
     $c = new BlogController('blogs/events.xsl');
    

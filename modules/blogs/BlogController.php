@@ -62,7 +62,7 @@ class BlogController extends Controller {
         
         $this->_mapper->
                 select($fields)
-                ->where( array( 'type' => '2' ) )
+                ->whereNot( array( 'type' => '1' ) )
                 ->orderBy('id')
                 ->limit($start * 10, 30);
         
@@ -408,5 +408,107 @@ class BlogController extends Controller {
             }
             
         }
+    }
+    
+    public function getSchedule($blog_id) {
+        
+        if ( !$this->_mapper->isOwner( $blog_id, $_SESSION['id'] ) ) {
+            header('HTTP/1.0 403 Forbidden');
+            die('Access denied');
+        }
+        
+        $fields = array('id', 'title', 'type', 'schedule');
+        
+        $search = array( 'id' => $blog_id );
+        
+        $this->_mapper->select($fields)->where($search);
+        
+        return $this->_mapper->fetch();
+    }
+    
+    public function updateSchedule($blog_id) {
+        
+        $dom = new DOMDocument('1.0', 'utf-8');
+        $dom->appendChild( new DOMElement('Blog') );
+        
+        $xml = simplexml_import_dom($dom);
+        $xml->addAttribute('id', $blog_id);
+        $xml->addChild('meta');
+        
+        if ( !empty($_FILES['xml_file']['tmp_name']) ) {
+            $file = $this->_setScheduleFile($_FILES['xml_file']['tmp_name']);
+            if ( empty($file) ) {
+                $xml->meta[0]
+                        ->addChild('message', 'Не удалось обновить расписание')
+                        ->addAttribute('type', 'error');
+            }
+            else {
+                $xml->addChild('schedule', $file);
+            }
+        }
+        else {
+            $xml->meta[0]
+                ->addChild('message', 'Вы не указали файл расписания')
+                ->addAttribute('type', 'error');
+        }
+               
+        if ( !$xml->meta[0]->count() ) {
+            try {
+                $this->_mapper->set((array)$xml)->where( array( 'id' => $blog_id ) )->update();
+                $xml->meta[0]->addChild('message', 'Расписание успешно обновлено')->addAttribute('type', 'success');
+            }
+            catch (PDOException $e) {
+                $xml->meta[0]->addChild('message', 'При обращении к базе данных произошла ошибка')->addAttribute('type', 'error');
+            }
+        }
+        
+        $this->_view->load($dom);
+        
+    }
+    
+    private function _setScheduleFile($filename) {
+        
+        $doc = new DOMDocument();
+        if ( !$doc->load($filename, LIBXML_NOERROR | LIBXML_NOWARNING) ) {
+            return '';
+        }
+
+        $id = $_SESSION['id'];
+                
+        $path = PROJECT_ROOT . "/media/uploads/" . $this->_makeSubpath($id);
+        
+        $path .= "/schedule{$id}_" . sprintf('%x', time() );
+        
+        if ( !file_exists( dirname($path) ) ) {
+            mkdir( dirname($path), 0755, true);
+        }
+        
+        if ( move_uploaded_file($filename, $path) ) {
+            return $path;
+        }
+        else {
+            return '';
+        }
+        
+    }
+    
+        /**
+     * Generates dir/path/name based on md5($id)
+     * @param string $id Base string
+     * @param integer $depth Number of sub directories
+     * @return string Generated subpath  
+     */
+    private function _makeSubpath($id, $depth = 3) {
+        $hash = md5($id);
+        $path = '';
+        
+        $depth = ($depth <= 0) ? 2 : ( ($depth >= 32) ? 31 : $depth - 1);
+        
+        foreach( range(0, $depth) as $n ) {
+            $path .= substr($hash, $n, 2);
+            $path .= ($n == $depth) ? '' : '/';
+        }
+        
+        return $path;
     }
 }
