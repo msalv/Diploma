@@ -39,6 +39,7 @@
                                 <li><a href="/people">Люди</a></li>
                                 <li><a href="/groups">Группы</a></li>
                                 <li><a href="/mail">Сообщения  <span id="msg-num"><xsl:text><![CDATA[]]></xsl:text></span></a></li>
+                                <li><a href="/schedules">Расписания</a></li>
                             </ul>
                             <ul class="nav pull-right">
                                 <li class="dropdown" id="user-menu">
