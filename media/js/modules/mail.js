@@ -65,8 +65,10 @@
         var url = $form.attr('action');
         
         $.post(url, $form.serialize() ).done(function(data){
-            var meta = $('div#meta');
-            $(meta).hide().html(data).fadeIn(500);
+            var $meta = $('div#meta');
+            $meta.hide().html(data).fadeIn(500);
+            $('input#subject').val('');
+            $('textarea#content').val('');
         })
         .fail(function(){
             console.log('request failed');
