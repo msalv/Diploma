@@ -64,6 +64,13 @@ else if ( isset($feed) ) {
         $c->loadView($feed, null, true);
     }
 }
+// show schedules
+else if ( isset($schedules) ) {
+
+    $c = new PersonController('people/schedules.xsl');
+    $schedules = $c->getSchedules($_SESSION['id']);
+    $c->loadView($schedules, null, true);
+}
 // show friends
 else if ( isset($friends) ) {
 

@@ -231,6 +231,24 @@ class PersonMapper extends Mapper {
         return $STH->fetchAll();
     }
     
+    public function fetchSchedules($id) {
+        
+        $sql = "SELECT id, title, type, schedule 
+            FROM blogs, subscribers_blog AS sb 
+            WHERE sb.subscriber_id=:id AND type='3' 
+            AND id=sb.blog_id;";
+        
+        $STH = $this->_DBH->prepare($sql);
+        
+        require_once PROJECT_ROOT . '/modules/blogs/Blog.php';
+        $STH->setFetchMode(PDO::FETCH_CLASS, 'Blog');
+        
+        $STH->execute( array('id' => $id) );
+        
+        return $STH->fetchAll();
+        
+    }
+    
     /**
      * Fetching blogs wich user subscribed to or owner of
      * @param integer $id User id

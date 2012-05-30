@@ -828,6 +828,13 @@ class PersonController extends Controller {
         
         return $this->_mapper->fetchFeed($id, $start * $amount, $amount);
     }
+    
+    
+    public function getSchedules($id) {
+        
+        return $this->_mapper->fetchSchedules($id);
+        
+    }
 
     /**
      * Get user's subscribed blogs
