@@ -64,6 +64,21 @@ abstract class Mapper {
         return $this;
     }
     
+    public function whereNot($search) {
+        
+        $where = array_map(
+            function ($key) {
+                return $key .= "<>:$key";
+            }, 
+            array_keys($search)
+        );
+            
+        $this->_where = " WHERE " . implode(' AND ', $where);
+        $this->_params = array_merge($this->_params, $search);
+            
+        return $this;
+    }
+    
     public function set($data) {
         
         if ( isset($data['@attributes']) ) {
