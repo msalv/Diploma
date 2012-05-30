@@ -7,14 +7,33 @@ require PEOPLE_ROOT . '/PersonController.php';
 
 // authorization
 if ( empty($_SESSION['id']) ) {
-    $c = new PersonController('people/auth.xsl');
     
-    if ( !empty($_POST) ) {
-        $c->authenticate();
-        exit();
-    }
+    // the first step
+    if ( empty($_SESSION['uid'] ) ) {
+    
+        $c = new PersonController('people/auth.xsl');
 
-    $c->loadView();
+        if ( !empty($_POST) ) {
+            $c->authenticate();
+            exit();
+        }
+
+        $c->loadView();
+    }
+    // the second step
+    else {
+               
+        $c = new PersonController('people/verify.xsl');
+        
+        if ( !empty($_POST) ) {
+            $c->verify();
+            exit();
+        }
+        
+        $c->loadView();
+        echo '<!--' . $_SESSION['code'] . '-->';
+
+    }
 }
 // logging out
 else if ( isset($logout) ) {
