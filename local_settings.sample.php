@@ -28,4 +28,12 @@ define('CONN_STRING', DB_ENGINE . ':host='. DB_HOST . ';dbname=' . DB_NAME);
  */
 const PDO_ERRMODE = PDO::ERRMODE_SILENT;
 
+/* 
+ * SMS notifications settings
+ * SMS gateway provided by Yakoon.com (sponsor! actually it's not a sponsor).
+ * Password should be hashed with md5.
+ */
+const SMS_USER = 'username';
+const SMS_PASS = '5f4dcc3b5aa765d61d8327deb882cf99'; // == md5('password');
+
 ?>
