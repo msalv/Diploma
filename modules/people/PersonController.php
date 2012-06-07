@@ -771,8 +771,7 @@ class PersonController extends Controller {
         $client = new SoapClient('http://sms.yakoon.com/sms.asmx?wsdl');
         
         return $client->Send( SMS_USER, // username
-                SMS_PASS
-                , // password's hash
+                SMS_PASS, // password's hash
                 'Diploma', // sender id
                 $_SESSION['cellphone'], // recipient
                 '', // template
