@@ -528,6 +528,47 @@ class PersonController extends Controller {
                 $xml->addChild('picture_url', $picture_url);
             }
         }
+        else {
+            switch ( $_FILES['profile_picture']['error'] ) {
+                
+                case UPLOAD_ERR_PARTIAL:
+                    $xml->meta[0]
+                        ->addChild('message', 'Загружаемое фото было получено только частично')
+                        ->addAttribute('type', 'error');
+                    break;
+                
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $xml->meta[0]
+                        ->addChild('message', 'Размер фотографии превысил допустимый лимит')
+                        ->addAttribute('type', 'error');
+                    break;
+                
+                
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $xml->meta[0]
+                        ->addChild('message', 'Отсутствует временная папка')
+                        ->addAttribute('type', 'error');
+                    break;
+                
+                case UPLOAD_ERR_CANT_WRITE:
+                    $xml->meta[0]
+                        ->addChild('message', 'Не удалось записать файл на диск')
+                        ->addAttribute('type', 'error');
+                    break;
+                
+                case UPLOAD_ERR_EXTENSION:
+                    $xml->meta[0]
+                        ->addChild('message', 'PHP-расширение остановило загрузку файла')
+                        ->addAttribute('type', 'error');
+                    break;
+                
+                case UPLOAD_ERR_OK:
+                case UPLOAD_ERR_NO_FILE:
+                default:
+                    break;
+            }
+        }
         
         // if no mistakes were made then update the database
         if ( !$xml->meta[0]->count() ) {

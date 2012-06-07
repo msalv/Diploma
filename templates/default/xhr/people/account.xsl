@@ -49,6 +49,7 @@
                         </div>
                         <div class="span">
                             <input type="file" class="input-xlarge" id="profile_picture" name="profile_picture" />
+                            <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
                             <p><small>Максимальный размер — 2 МБ.<br/>Допустимые форматы: PNG, JPG, GIF</small></p>
                         </div>
                     </div>
