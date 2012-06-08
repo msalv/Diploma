@@ -23,10 +23,10 @@
                     <div class="row-fluid">
                         
                         <form enctype="multipart/form-data" action="/uploads" method="POST" class="well form-inline">
-                            <input name="file-input" id="file-input" class="input-large"/>
-                            <button class="btn" type="button" id="file-btn">Обзор...</button>
+                            <!--<input name="file-input" id="file-input" class="input-large"/>
+                            <button class="btn" type="button" id="file-btn">Обзор...</button>-->
+                            <input type="file" name="doc" id="doc" />
                             <button class="btn btn-info" type="submit">Загрузить</button>
-                            <input type="file" name="doc" id="doc" class="invisible" size="1" />
                         </form>
                         
                         <xsl:apply-templates select="dataset" />
@@ -39,7 +39,7 @@
                 <script>
                     (function($, window, document, undefined) {
                         
-                        var fakeClick = function(e) {
+                    <!--var fakeClick = function(e) {
                             $('input#doc').click();
                             e.preventDefault();
                         } 
@@ -54,7 +54,8 @@
                             if (typeof val === "string") {
                                 $("input#file-input").val( val );
                             }
-                        }).change();
+                        });
+                    -->
                         
                         $('tbody tr').on('click', function(e) {
                                                            

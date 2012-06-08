@@ -16,12 +16,6 @@ body {
     height: 25px; 
 }
 
-.invisible {
-    opacity: 0; 
-    z-index: -1; 
-    position: relative;
-}
-
 #msg-num {
     font-weight: bold;
 }
