@@ -26,7 +26,13 @@
         session_start();
     }
     if ( empty($_SESSION['id']) || ($_SESSION['ip'] != $_SERVER['REMOTE_ADDR']) ) {
-        require_once $modules['people'];
+        
+        if ( substr($_SERVER['REQUEST_URI'],0,7) == "/signup" ) {
+            require_once $modules['admin'];
+        }
+        else {
+            require_once $modules['people'];
+        }
         exit();
     }
     

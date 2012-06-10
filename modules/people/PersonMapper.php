@@ -1,5 +1,9 @@
 <?php
 
+if ( !defined('PEOPLE_ROOT') ) {
+    define('PEOPLE_ROOT', PROJECT_ROOT . '/modules/people');
+}
+
 require_once PROJECT_ROOT . '/core/Mapper.php';
 require_once PEOPLE_ROOT . '/Person.php';
 
@@ -10,7 +14,21 @@ require_once PEOPLE_ROOT . '/Person.php';
  */
 class PersonMapper extends Mapper {
 
-    public function save($modelObject) {
+    public function save($data) {
+        
+        if ( isset($data['@attributes']) ) {
+            $data = array_merge($data, $data['@attributes']);
+        }
+        
+        unset( $data['@attributes'] );
+        unset( $data['meta'] );
+        
+        $sql = "INSERT INTO people (first_name, middle_name, last_name, sid, cellphone, login, password) 
+            VALUES (:first_name, :middle_name, :last_name, :sid, :cellphone, :login, :password)";
+        
+        $STH = $this->_DBH->prepare($sql);
+        
+        $STH->execute($data);
         
     }
     

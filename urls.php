@@ -7,6 +7,7 @@
         'blogs' => PROJECT_ROOT . "/modules/blogs/blogs.php",
         'uploads' => PROJECT_ROOT . "/modules/uploads/uploads.php",
         'mail' => PROJECT_ROOT . "/modules/mail/mail.php",
+        'admin' => PROJECT_ROOT . "/modules/admin/admin.php",
     );
 
     /**
@@ -16,6 +17,10 @@
         array(
             'file' => $modules['home'],
             'pattern' => '/^\/(?<test>test)\/?$/'
+        ),
+        array(
+            'file' => $modules['admin'],
+            'pattern' => '/^\/(?<signup>signup)\/?$/'
         ),
         array(
             'file' => $modules['uploads'],

@@ -24,8 +24,8 @@
                 <title>
                     <xsl:apply-templates mode="title" select="." />
                 </title>
-                <link href="/media/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-                <link href="/media/bootstrap/css/bootstrap.subnav.css" rel="stylesheet" />
+                <link href="/media/templates/default/css/bootstrap.min.css" rel="stylesheet" />
+                <link href="/media/templates/default/css/bootstrap.subnav.css" rel="stylesheet" />
                 <link href="/media/styles.css" rel="stylesheet" />
                 <xsl:comment>Le HTML5 shim, for IE6-8 support of HTML5 elements</xsl:comment>
                 <xsl:comment><![CDATA[[if lt IE 9]><script src="/media/js/html5.js"></script><![endif]]]></xsl:comment>
@@ -80,7 +80,7 @@
                 <script src="/media/js/jquery.min.js">
                     <xsl:text><![CDATA[]]></xsl:text>
                 </script>
-                <script src="/media/bootstrap/js/bootstrap.min.js">
+                <script src="/media/templates/default/js/bootstrap.min.js">
                     <xsl:text><![CDATA[]]></xsl:text>
                 </script>
                 

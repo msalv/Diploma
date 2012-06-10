@@ -23,7 +23,7 @@
                 <title>
                     <xsl:text>Вход</xsl:text>
                 </title>
-                <link href="/media/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+                <link href="/media/templates/default/css/bootstrap.min.css" rel="stylesheet" />
                 <style><![CDATA[body { padding-top: 60px; }]]></style>
                 <xsl:comment>Le HTML5 shim, for IE6-8 support of HTML5 elements</xsl:comment>
                 <xsl:comment><![CDATA[[if lt IE 9]><script src="/media/js/html5.js"></script><![endif]]]></xsl:comment>
@@ -60,7 +60,7 @@
                 </div>
                 
                 <script src="/media/js/jquery.min.js"><xsl:comment/></script>
-                <script src="/media/bootstrap/js/bootstrap.min.js"><xsl:comment/></script>
+                <script src="/media/templates/default/js/bootstrap.min.js"><xsl:comment/></script>
             </body>
         </html>
     </xsl:template>
