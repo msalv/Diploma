@@ -8,6 +8,8 @@
 
 // Current template
 define('TEMPLATE_ROOT', PROJECT_ROOT . '/templates/default/');
+//define('TEMPLATE_ROOT', PROJECT_ROOT . '/templates/united/');
+//define('TEMPLATE_ROOT', PROJECT_ROOT . '/templates/amelia/');
 
 // DB connection settings
 const DB_ENGINE = 'mysql';
