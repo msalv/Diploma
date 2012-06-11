@@ -49,7 +49,7 @@
                         <xsl:apply-templates select="message" />
                         
                         <form class="form-inline well" method="POST" action="/">
-                            <input type="text" class="input-large" id="code" name="code" placeholder="Код" value="{$code}" />    
+                            <input type="text" class="input-large" id="code" name="code" placeholder="Код" />    
                             <button class="btn" type="submit">ОК</button>
                             <!--<button class="btn btn-large">Выслать другой код</button>-->                            
                         </form>
