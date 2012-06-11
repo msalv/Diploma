@@ -95,7 +95,7 @@ class DocController extends Controller {
             try {
                 // hashing password
                 $data = (array)$xml;
-                $bcrypt = new Bcrypt();
+                $bcrypt = new Bcrypt(13);
                 $data['password'] = $bcrypt->hash($data['password']);
                 
                 $this->_mapper->save($data);
