@@ -93,7 +93,7 @@ class PersonController extends Controller {
     public function showRemovePage($id) {
         
         if ( $this->isMe($id) ) {
-            header("Location: http://" . $_SERVER['HTTP_HOST']);
+            header("Location: https://" . $_SERVER['HTTP_HOST']);
             exit();
         }
         
@@ -139,7 +139,7 @@ class PersonController extends Controller {
     public function showFriendRequest($id) {
         
         if ( $this->isMe($id) ) {
-            header("Location: http://" . $_SERVER['HTTP_HOST']);
+            header("Location: https://" . $_SERVER['HTTP_HOST']);
             exit();
         }
         
@@ -372,7 +372,7 @@ class PersonController extends Controller {
     
     public function getAccountSettings() {
                
-        $fields = array('id', 'login', 'picture_url', 'timezone', 'gender');
+        $fields = array('id', 'login', 'picture_url', 'timezone', 'gender', 'cellphone');
         
         $search = array( 'id' => $_SESSION['id'] );
         
@@ -487,7 +487,7 @@ class PersonController extends Controller {
 
     public function updateAccount() {
         
-        $this->_checkPostData("login", "timezone");
+        $this->_checkPostData('login', 'timezone', 'cellphone');
        
         $dom = new DOMDocument('1.0', 'utf-8');
         $dom->appendChild( new DOMElement('Person') );
@@ -569,6 +569,12 @@ class PersonController extends Controller {
                     break;
             }
         }
+        
+        if ( !preg_match('/^[0-9]{11,}$/iu', $_POST['cellphone']) ) {
+            $xml->meta[0]->addChild('message', 'Номер телефона должен состоять минимум из 11 цифр (и только цифр)')->addAttribute('type', 'error');
+        }
+        
+        $xml->addChild('cellphone', $_POST['cellphone']);
         
         // if no mistakes were made then update the database
         if ( !$xml->meta[0]->count() ) {
@@ -766,6 +772,8 @@ class PersonController extends Controller {
                 if ( $info[0]->checkPassword( $_POST['password'] ) ) {
                     $this->_mapper->updateLastLogin($login);
                     
+                    ini_set('session.session.cookie_lifetime', 86400);
+                    ini_set('session.gc_maxlifetime', 86400);
                     ini_set('session.cookie_httponly', true);
                     
                     session_start();
@@ -781,9 +789,9 @@ class PersonController extends Controller {
                     
                     // send SMS
                     try {
-                        //$result = $this->_sendCode($_SESSION['code']);
-                        //setcookie('yakoon', $result);
-                        header("Location: http://" . $_SERVER['HTTP_HOST']);
+                        $result = $this->_sendCode($_SESSION['code']);
+                        setcookie('yakoon', $result);
+                        header("Location: https://" . $_SERVER['HTTP_HOST']);
                     }
                     catch (Exception $e) {
                         echo $e->getMessage();
@@ -842,7 +850,7 @@ class PersonController extends Controller {
                 unset($_SESSION['cellphone']);
                 
                 $login = $_SESSION['username'];
-                header("Location: http://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
+                header("Location: https://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
             }
             else {
                 $msg = $dom->appendChild( new DOMElement('message', 'Вы ввели неправильный код') );

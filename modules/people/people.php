@@ -42,7 +42,7 @@ else if ( isset($logout) ) {
         session_unset();
         session_destroy();
     }
-    header("Location: http://" . $_SERVER['HTTP_HOST']);
+    header("Location: https://" . $_SERVER['HTTP_HOST']);
 }
 
 // show feed

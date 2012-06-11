@@ -366,7 +366,7 @@ class BlogController extends Controller {
         if ( !$xml->meta[0]->count() ) {
             try {
                 $this->_mapper->save((array)$xml);
-                header('Location: http://' . $_SERVER['HTTP_HOST'] . '/groups');
+                header('Location: https://' . $_SERVER['HTTP_HOST'] . '/groups');
             }
             catch (PDOException $e) {
                 $xml->meta[0]->addChild('message', 'При обращении к базе данных произошла ошибка')->addAttribute('type', 'error');
