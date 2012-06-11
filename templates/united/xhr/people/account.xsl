@@ -58,6 +58,21 @@
                 <hr />
 
                 <xsl:apply-templates select="." mode="login" />
+                
+                <div class="control-group">
+                    <label for="cellphone" class="control-label">Мобильный телефон</label>
+                    <div class="controls">
+                        <input type="text" name="cellphone" id="cellphone" class="input-xlarge">
+                            <xsl:attribute name="value">
+                                <xsl:apply-templates select="cellphone"/>
+                            </xsl:attribute>
+                        </input>
+                            <p class="help-block">
+                                <small>Укажите свой мобильный телефон без плюса.
+                                    <br/>Например, <strong>79119010203.</strong></small>
+                            </p>
+                        </div>
+                </div>
 
                 <hr />
 
