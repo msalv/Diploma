@@ -73,10 +73,12 @@ class Person implements Model {
                         break;
                     
                     case 'date_of_birth':
-                        $date = $node->appendChild( new DOMElement($name) );
-                        $date->setAttribute('day', substr($value, 8, 2));
-                        $date->setAttribute('month', substr($value, 5, 2));
-                        $date->setAttribute('year', substr($value, 0, 4));
+                        if ($value != "0000-00-00") {
+                            $date = $node->appendChild( new DOMElement($name) );
+                            $date->setAttribute('day', substr($value, 8, 2));
+                            $date->setAttribute('month', substr($value, 5, 2));
+                            $date->setAttribute('year', substr($value, 0, 4));
+                        }
                         break;
                     
                     case 'friends':
