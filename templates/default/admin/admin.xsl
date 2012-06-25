@@ -54,7 +54,7 @@
 
                     <form class="form-horizontal" method="POST" action="/signup">
                         <fieldset>
-                        <legend>Регистрация</legend>
+                        <legend>Регистрация <small>Все поля являются обязательными</small></legend>
 
                             <xsl:apply-templates select="." mode="last_name" />
                             <xsl:apply-templates select="." mode="first_name" />
