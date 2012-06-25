@@ -93,7 +93,7 @@ class PersonController extends Controller {
     public function showRemovePage($id) {
         
         if ( $this->isMe($id) ) {
-            header("Location: https://" . $_SERVER['HTTP_HOST']);
+            header("Location: /");
             exit();
         }
         
@@ -139,7 +139,7 @@ class PersonController extends Controller {
     public function showFriendRequest($id) {
         
         if ( $this->isMe($id) ) {
-            header("Location: https://" . $_SERVER['HTTP_HOST']);
+            header("Location: /");
             exit();
         }
         
@@ -789,9 +789,11 @@ class PersonController extends Controller {
                     
                     // send SMS
                     try {
-                        $result = $this->_sendCode($_SESSION['code']);
-                        setcookie('yakoon', $result);
-                        header("Location: https://" . $_SERVER['HTTP_HOST']);
+                        //if ($_SESSION['uid'] != '1') { // just 4 debug
+                            $result = $this->_sendCode($_SESSION['code']);
+                            setcookie('yakoon', $result);
+                        //}
+                        header("Location: /");
                     }
                     catch (Exception $e) {
                         echo $e->getMessage();
@@ -850,7 +852,7 @@ class PersonController extends Controller {
                 unset($_SESSION['cellphone']);
                 
                 $login = $_SESSION['username'];
-                header("Location: https://" . $_SERVER['HTTP_HOST'] . "/people/$login/");
+                header("Location: /");
             }
             else {
                 $msg = $dom->appendChild( new DOMElement('message', 'Вы ввели неправильный код') );
